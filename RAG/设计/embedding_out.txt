@@ -1,0 +1,87 @@
+C:\Users\¡ı”Ì∫¨\Desktop\RAG\local_embedding_service.py:61: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+INFO:     Started server process [4056]
+INFO:     Waiting for application startup.
+2026-05-18 19:11:51,973 | INFO | local_embedding_service | Loading local embedding model from D:\models\m3e-base
+2026-05-18 19:11:52,406 | INFO | local_embedding_service | Local embedding model loaded from D:\models\m3e-base
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8002 (Press CTRL+C to quit)
+INFO:     127.0.0.1:40323 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40326 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40337 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:2883 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:2884 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:2895 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:2896 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6710 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6713 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15628 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15630 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15632 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15635 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29157 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29184 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29185 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29186 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29187 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29188 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29189 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29190 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29191 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29192 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29193 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29194 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29195 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19902 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19903 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19904 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19905 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19906 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19907 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19908 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19909 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19910 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19911 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19912 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19913 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19917 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19918 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19922 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19921 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19929 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19930 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19936 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19935 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19939 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19940 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19946 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19947 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58423 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58424 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58425 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58426 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58427 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58428 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58429 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58430 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58431 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58432 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58433 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58434 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58440 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58439 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58448 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58449 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58453 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58454 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58461 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58462 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58469 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58468 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58474 - "POST /embeddings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58475 - "POST /embeddings HTTP/1.1" 200 OK

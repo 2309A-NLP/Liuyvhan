@@ -1,0 +1,17 @@
+[
+  {
+    "question": "我最近总是很焦虑，晚上睡不着。",
+    "role_id": "psychologist",
+    "expected_keywords": ["共情", "睡眠", "场景", "建议"]
+  },
+  {
+    "question": "公司没签劳动合同，现在突然辞退我，我该准备什么材料？",
+    "role_id": "legal_consultant",
+    "expected_keywords": ["劳动合同", "证据", "时间线", "记录"]
+  },
+  {
+    "question": "我有十万块，两年后要用，能不能都买股票？",
+    "role_id": "wealth_advisor",
+    "expected_keywords": ["风险", "期限", "流动性", "配置"]
+  }
+]

@@ -1,0 +1,15 @@
+C:\Users\刘禹含\Desktop\RAG\local_embedding_service.py:61: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+INFO:     Started server process [25596]
+INFO:     Waiting for application startup.
+2026-05-18 19:10:30,112 | INFO | local_embedding_service | Loading local embedding model from D:\models\m3e-base
+2026-05-18 19:10:30,652 | INFO | local_embedding_service | Local embedding model loaded from D:\models\m3e-base
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 8002): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.

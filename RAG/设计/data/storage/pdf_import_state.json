@@ -1,0 +1,8 @@
+{
+  "C:\\Users\\刘禹含\\Desktop\\RAG\\data\\raw_pdfs\\example.pdf": {
+    "status": "imported",
+    "fingerprint": "6aac6e4e722fbb6ff4c9f8dd62f03fd3edd9aafa",
+    "role_id": "doctor",
+    "chunks": 251
+  }
+}

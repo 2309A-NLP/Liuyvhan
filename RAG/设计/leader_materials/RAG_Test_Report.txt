@@ -1,0 +1,256 @@
+RAG 项目测试说明
+
+        一、测试时间
+        2026-05-29
+
+        二、测试环境
+        1. 项目路径：C:\Users\刘禹含\Desktop\RAG
+        2. Python 环境：D:\Anaconda\envs\RAG\python.exe
+        3. 测试方式：
+           - 单元测试：pytest
+           - 接口冒烟测试：FastAPI TestClient
+           - 验证范围：首页、健康检查、角色列表、用户创建、聊天接口、会话历史
+
+        三、单元测试结果
+        1. 当前执行结果：11 个测试中 7 个通过，4 个失败。
+        2. 失败点聚焦：
+           - system prompt 文案与测试断言不一致
+           - Retriever 测试桩缺少 supports_native_hybrid 属性
+           - 流式输出当前实现为聚合后再切块，和测试期望逐块返回不一致
+           - UTF-8 流式分块断言与当前实现不一致
+
+        四、接口冒烟测试结果
+        1. /health：通过，返回状态为 ok
+        2. /roles：通过，当前角色数 4
+        3. /users：通过，可正常创建测试用户
+        4. /chat：通过，返回状态码 200
+        5. /sessions/{session_id}/history：通过，当前测试会话消息数 4
+
+        五、关键测试结论
+        1. 项目页面入口和主要 API 链路可以访问。
+        2. 在 mock LLM + 本地文件存储模式下，聊天主流程可跑通。
+        3. 当前代码存在 4 项单元测试失败，属于待修复问题，不建议直接宣称“全部测试通过”。
+        4. 当前本地数据还存在向量维度历史数据不一致风险，正式环境上线前需要统一 Milvus / 本地向量存储维度。
+
+        六、pytest 原始结果摘录
+        ...F...F.FF                                                              [100%]
+================================== FAILURES ===================================
+_______________ test_system_prompt_prioritizes_current_question _______________
+
+    def test_system_prompt_prioritizes_current_question() -> None:
+        role = RoleProfile(
+            role_id="psychologist",
+            name="Support Guide",
+            domain="mental health",
+            description="Provide grounded emotional support.",
+            personality="Calm and structured.",
+            tone="Warm but direct.",
+            system_rules=["Stay grounded in the user's actual question."],
+            prompt_template="unused",
+            metadata={},
+        )
+
+        prompt = build_system_prompt(
+            role=role,
+            user_message="How can I sleep better when I am stressed?",
+            short_memory=[{"role": "user", "content": "I have been tired lately."}],
+            long_memory=[{"content": "The user often struggles with bedtime.", "source": "memory"}],
+            references=[
+                RetrievedChunk(
+                    doc_id="doc-1",
+                    title="Sleep routine",
+                    content="Reduce caffeine late in the day and keep a stable bedtime.",
+                    source="guide",
+                    score=0.88,
+                )
+            ],
+        )
+
+>       assert "Current user question:" in prompt
+E       AssertionError: assert 'Current user question:' in '���������ڽ��н�ɫ����ʽ�ʴ���ʼ�ձ��ָý�ɫ���ݣ������Ƚ���û���ǰ��һ�ֵ����⡣\n\n��ɫ���ϣ�\n- ��ɫ ID��psychologist\n- ��ɫ���ƣ�Support Guide\n- ��ɫ����mental health...����Ƭ������ `<br>`��`response`��`assistant`��`kuk`��\n- ����������ݺ͵�ǰ���ⲻһ�£�Ҫ���Ⱦ�����ǰ�ش𣬶����Ǽ�����д������\n- ��Ҫ��������ʱ����Ȼ�ᵽ���ϱ��⼴�ɣ���Ҫԭ���������ԭ�ġ�'
+
+tests\test_chat.py:40: AssertionError
+_______________ test_retriever_expands_query_and_filters_noise ________________
+
+    def test_retriever_expands_query_and_filters_noise() -> None:
+        settings = SimpleNamespace(
+            knowledge_collection="role_knowledge",
+            retrieval_top_k=6,
+            rerank_top_n=4,
+            retrieval_query_variants=3,
+            retrieval_min_score=0.18,
+        )
+        milvus = _FakeMilvusClient()
+        retriever = Retriever(
+            settings=settings,
+            milvus_client=milvus,
+            embedding_service=_FakeEmbeddingService(),
+            rerank_service=_FakeRerankService(),
+            logger=SimpleNamespace(info=lambda *args, **kwargs: None),
+        )
+
+>       results = retriever.retrieve("���� ����Ż���ʾ�ʣ�", role_id="psychologist")
+
+tests\test_chat.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+core\retriever.py:32: in retrieve
+    raw_results = self._search_candidates(query=query, role_id=role_id)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <core.retriever.Retriever object at 0x000001E05359D880>
+query = '���� ����Ż���ʾ�ʣ�', role_id = 'psychologist'
+
+    def _search_candidates(self, query: str, role_id: str) -> list[dict]:
+        # �����Ǽ�����ڣ�������֧��ԭ����ϼ����������Ƚ��� Milvus��
+        # �����֧�֣����ڱ��طֱ��� dense ������ BM25 �������ٰѽ���ϲ���
+>       if self.milvus_client.supports_native_hybrid and self.settings.milvus_enabled:
+E       AttributeError: '_FakeMilvusClient' object has no attribute 'supports_native_hybrid'
+
+core\retriever.py:72: AttributeError
+___________ test_openai_compatible_stream_generation_yields_chunks ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E05357C560>
+
+    def test_openai_compatible_stream_generation_yields_chunks(monkeypatch: pytest.MonkeyPatch) -> None:
+        captured: dict[str, object] = {}
+
+        class _Response:
+            encoding = None
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):  # noqa: ANN001
+                return False
+
+            def raise_for_status(self) -> None:
+                return None
+
+            def iter_lines(self, decode_unicode: bool = False):  # noqa: FBT001, FBT002
+                assert decode_unicode is False
+                return iter(
+                    [
+                        b'data: {"choices":[{"delta":{"content":"live "}}]}',
+                        b'data: {"choices":[{"delta":{"content":"answer"}}]}',
+                        b"data: [DONE]",
+                    ]
+                )
+
+        def fake_post(url, json, headers, timeout, stream):  # noqa: ANN001
+            captured["url"] = url
+            captured["json"] = json
+            captured["headers"] = headers
+            captured["timeout"] = timeout
+            captured["stream"] = stream
+            return _Response()
+
+        monkeypatch.setattr("core.llm_client.requests.post", fake_post)
+        settings = SimpleNamespace(
+            llm_provider="siliconflow",
+            llm_model_name="Qwen/Qwen2.5-7B-Instruct",
+            llm_api_base="https://api.siliconflow.cn/v1",
+            llm_api_key="secret",
+            llm_timeout=30,
+            llm_max_tokens=1024,
+            llm_temperature=0.35,
+            llm_top_p=0.9,
+            llm_presence_penalty=0.2,
+        )
+        client = LLMClient(settings, logger=SimpleNamespace(info=lambda *args, **kwargs: None))
+
+        chunks = list(
+            client.generate_stream(
+                role=SimpleNamespace(role_id="virtual_friend"),
+                message="hello",
+                short_memory=[],
+                long_memory=[],
+                references=[],
+                system_prompt="system prompt",
+            )
+        )
+
+>       assert chunks == ["live ", "answer"]
+E       AssertionError: assert ['live answer'] == ['live ', 'answer']
+E         
+E         At index 0 diff: 'live answer' != 'live '
+E         Right contains one more item: 'answer'
+E         Use -v to get more diff
+
+tests\test_chat.py:359: AssertionError
+________ test_openai_compatible_stream_generation_decodes_utf8_chunks _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E05357FB60>
+
+    def test_openai_compatible_stream_generation_decodes_utf8_chunks(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        class _Response:
+            encoding = None
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):  # noqa: ANN001
+                return False
+
+            def raise_for_status(self) -> None:
+                return None
+
+            def iter_lines(self, decode_unicode: bool = False):  # noqa: FBT001, FBT002
+                assert decode_unicode is False
+                return iter(
+                    [
+                        b'data: {"choices":[{"delta":{"content":"\xe4\xbd\xa0\xe5\xa5\xbd"}}]}',
+                        b'data: {"choices":[{"delta":{"content":"\xef\xbc\x8c\xe4\xb8\x96\xe7\x95\x8c"}}]}',
+                        b"data: [DONE]",
+                    ]
+                )
+
+        def fake_post(url, json, headers, timeout, stream):  # noqa: ANN001
+            return _Response()
+
+        monkeypatch.setattr("core.llm_client.requests.post", fake_post)
+        settings = SimpleNamespace(
+            llm_provider="siliconflow",
+            llm_model_name="Qwen/Qwen2.5-7B-Instruct",
+            llm_api_base="https://api.siliconflow.cn/v1",
+            llm_api_key="secret",
+            llm_timeout=30,
+            llm_max_tokens=1024,
+            llm_temperature=0.35,
+            llm_top_p=0.9,
+            llm_presence_penalty=0.2,
+        )
+        client = LLMClient(settings, logger=SimpleNamespace(info=lambda *args, **kwargs: None))
+
+        chunks = list(
+            client.generate_stream(
+                role=SimpleNamespace(role_id="virtual_friend"),
+                message="���",
+                short_memory=[],
+                long_memory=[],
+                references=[],
+                system_prompt="system prompt",
+            )
+        )
+
+>       assert chunks == ["���", "������"]
+E       AssertionError: assert ['��ã�����'] == ['���', '������']
+E         
+E         At index 0 diff: '��ã�����' != '���'
+E         Right contains one more item: '������'
+E         Use -v to get more diff
+
+tests\test_chat.py:418: AssertionError
+============================== warnings summary ===============================
+D:\Anaconda\envs\RAG\Lib\site-packages\starlette\formparsers.py:12
+  D:\Anaconda\envs\RAG\Lib\site-packages\starlette\formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_chat.py::test_system_prompt_prioritizes_current_question - ...
+FAILED tests/test_chat.py::test_retriever_expands_query_and_filters_noise - A...
+FAILED tests/test_chat.py::test_openai_compatible_stream_generation_yields_chunks
+FAILED tests/test_chat.py::test_openai_compatible_stream_generation_decodes_utf8_chunks
+4 failed, 7 passed, 1 warning in 2.55s

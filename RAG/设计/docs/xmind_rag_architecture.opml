@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>RAG 模型架构图（XMind 汇报版）</title>
+  </head>
+  <body>
+    <outline text="角色扮演式 RAG 对话系统架构">
+      <outline text="1. 项目目标">
+        <outline text="打造可落地的角色扮演式智能问答系统" />
+        <outline text="实现知识检索、记忆管理、模型生成的一体化闭环" />
+        <outline text="支撑多角色、多会话、流式回复的业务场景" />
+        <outline text="为后续标准化升级预留扩展空间" />
+      </outline>
+      <outline text="2. 核心能力">
+        <outline text="角色化对话">
+          <outline text="支持不同角色人设" />
+          <outline text="不同角色绑定不同知识范围" />
+        </outline>
+        <outline text="RAG 检索增强">
+          <outline text="针对用户问题检索知识库" />
+          <outline text="将检索结果作为模型回答依据" />
+        </outline>
+        <outline text="语义相似度检索">
+          <outline text="将用户问题转为向量表示" />
+          <outline text="基于向量相似度召回语义接近内容" />
+          <outline text="解决关键词不同但语义相近的检索问题" />
+        </outline>
+        <outline text="混合检索">
+          <outline text="查询改写生成多个检索版本" />
+          <outline text="向量召回获取候选知识" />
+          <outline text="关键词打分补充语义检索" />
+          <outline text="重排序输出最优结果" />
+        </outline>
+        <outline text="短期记忆">
+          <outline text="保存当前会话最近多轮上下文" />
+          <outline text="保证多轮对话连贯性" />
+        </outline>
+        <outline text="长期记忆">
+          <outline text="保存用户偏好、身份、目标等长期信息" />
+          <outline text="支持跨会话复用" />
+        </outline>
+        <outline text="流式生成">
+          <outline text="支持边生成边返回" />
+          <outline text="提升交互体验" />
+        </outline>
+      </outline>
+      <outline text="3. 总体架构">
+        <outline text="用户层">
+          <outline text="浏览器用户" />
+          <outline text="工作台页面" />
+        </outline>
+        <outline text="接口层">
+          <outline text="FastAPI 应用入口" />
+          <outline text="聊天接口 /chat" />
+          <outline text="流式接口 /chat/stream" />
+          <outline text="角色接口 /roles" />
+          <outline text="历史接口 /sessions/{session_id}/history" />
+        </outline>
+        <outline text="业务编排层">
+          <outline text="ChatService：负责一轮完整对话调度" />
+          <outline text="MemoryManager：负责短期记忆与长期记忆" />
+          <outline text="KnowledgeManager：负责知识初始化与重载" />
+        </outline>
+        <outline text="核心能力层">
+          <outline text="Retriever：负责知识检索，采用混合检索策略" />
+          <outline text="EmbeddingService：负责文本向量化，支撑语义相似度检索" />
+          <outline text="RerankService：负责检索结果重排序" />
+          <outline text="role_prompts：负责组装系统提示词" />
+          <outline text="LLMClient：负责调用大模型生成回答" />
+        </outline>
+        <outline text="数据存储层">
+          <outline text="SQLite：保存用户与角色基础信息" />
+          <outline text="Redis：保存短期会话记忆" />
+          <outline text="Milvus：保存知识库向量与长期记忆向量" />
+        </outline>
+        <outline text="数据源层">
+          <outline text="roles.json：角色种子数据" />
+          <outline text="knowledge_documents.json：知识种子数据" />
+        </outline>
+      </outline>
+      <outline text="4. 核心流程">
+        <outline text="对话流程">
+          <outline text="用户发起问题" />
+          <outline text="接口层接收请求" />
+          <outline text="ChatService 调度处理" />
+          <outline text="读取角色信息" />
+          <outline text="读取短期记忆" />
+          <outline text="检索长期记忆" />
+          <outline text="检索知识库">
+            <outline text="查询改写" />
+            <outline text="语义相似度召回" />
+            <outline text="向量召回" />
+            <outline text="关键词打分" />
+            <outline text="重排序" />
+          </outline>
+          <outline text="组装系统提示词" />
+          <outline text="调用大模型生成答案" />
+          <outline text="写回短期记忆" />
+          <outline text="必要时写入长期记忆" />
+          <outline text="返回前端展示" />
+        </outline>
+        <outline text="知识入库流程">
+          <outline text="读取角色种子数据" />
+          <outline text="读取知识文档种子数据" />
+          <outline text="文本切块" />
+          <outline text="向量化处理" />
+          <outline text="写入 Milvus 知识集合" />
+          <outline text="写入角色信息到 SQLite" />
+        </outline>
+      </outline>
+      <outline text="5. 关键数据对象">
+        <outline text="session_id：标识一次会话，用于短期上下文隔离" />
+        <outline text="user_id：标识一个用户，用于长期记忆复用" />
+        <outline text="role_id：标识当前角色，用于角色设定和知识过滤" />
+        <outline text="system_prompt：汇总角色、记忆、知识后的模型输入背景" />
+        <outline text="references：检索出的知识片段，用于增强回答可信度" />
+      </outline>
+      <outline text="6. 业务价值">
+        <outline text="提升回答准确性">
+          <outline text="不只依赖模型参数" />
+          <outline text="还能结合外部知识库" />
+          <outline text="通过语义相似度检索找到表达不同但含义接近的知识" />
+          <outline text="通过混合检索提升召回率和相关性" />
+        </outline>
+        <outline text="提升上下文连续性">
+          <outline text="短期记忆保证当前对话连贯" />
+          <outline text="长期记忆支持用户偏好沉淀" />
+        </outline>
+        <outline text="提升角色沉浸感">
+          <outline text="每个角色拥有独立设定和知识范围" />
+        </outline>
+        <outline text="提升系统可扩展性">
+          <outline text="模块边界清晰" />
+          <outline text="支持替换 Embedding、Rerank、LLM、数据库" />
+        </outline>
+      </outline>
+      <outline text="7. 当前实现特点">
+        <outline text="后端采用 FastAPI" />
+        <outline text="前端采用原生 HTML/CSS/JavaScript" />
+        <outline text="短期记忆已接入 Redis" />
+        <outline text="向量检索已接入 Milvus" />
+        <outline text="已具备语义相似度检索能力">
+          <outline text="文本先做向量化" />
+          <outline text="再按向量相似度召回" />
+        </outline>
+        <outline text="已实现轻量混合检索">
+          <outline text="Query Rewrite" />
+          <outline text="Vector Recall" />
+          <outline text="Keyword Score" />
+          <outline text="Heuristic Rerank" />
+        </outline>
+        <outline text="大模型调用兼容 OpenAI 风格接口" />
+        <outline text="当前 Embedding 为轻量实现" />
+        <outline text="当前 Rerank 为启发式实现" />
+      </outline>
+      <outline text="8. 现阶段亮点">
+        <outline text="已跑通完整 RAG 闭环" />
+        <outline text="已支持角色、记忆、检索、生成协同" />
+        <outline text="已支持多会话与流式输出" />
+        <outline text="已具备本地开发与演示能力" />
+      </outline>
+      <outline text="9. 后续优化方向">
+        <outline text="工程标准化">
+          <outline text="SQLite 升级为 MySQL" />
+          <outline text="完善日志与监控" />
+          <outline text="丰富测试和评测" />
+        </outline>
+        <outline text="检索优化">
+          <outline text="优化 Query Rewrite" />
+          <outline text="优化召回与过滤策略" />
+          <outline text="优化长期记忆召回规则" />
+        </outline>
+        <outline text="模型标准化">
+          <outline text="替换为真实 Embedding 模型" />
+          <outline text="替换为真实 Rerank 模型" />
+        </outline>
+        <outline text="产品化升级">
+          <outline text="优化管理后台" />
+          <outline text="优化前端体验" />
+          <outline text="增强运维可视化" />
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

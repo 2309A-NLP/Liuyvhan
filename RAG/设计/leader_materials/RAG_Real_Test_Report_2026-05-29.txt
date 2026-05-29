@@ -1,0 +1,184 @@
+RAG 项目真实联调测试报告
+
+测试日期：2026-05-29
+测试方式：真实服务联调测试，不使用 mock 模式
+测试目的：验证当前项目在已开启真实模型与真实依赖服务条件下，是否可以完成完整 RAG 链路
+
+一、当前实际配置
+
+1. 主应用：FastAPI，端口 8001
+2. Embedding 服务：`local_embedding_service.py`，端口 8002
+3. Rerank 服务：`local_rerank_service.py`，端口 8003
+4. MySQL：127.0.0.1:3306
+5. Redis：127.0.0.1:6379
+6. Milvus：127.0.0.1:19530
+7. 大模型提供方：`siliconflow`
+8. 大模型地址：`https://api.siliconflow.cn/v1`
+9. 当前配置角色总数：5 个
+
+二、真实测试项与结果
+
+1. 主应用健康检查
+测试接口：`GET http://127.0.0.1:8001/health`
+测试结果：通过
+返回结果：
+`{"status":"ok","llm_provider":"siliconflow","embedding_backend":"remote_api","storage_mode":"milvus/redis"}`
+
+2. Embedding 服务健康检查
+测试接口：`GET http://127.0.0.1:8002/health`
+测试结果：通过
+返回结果：
+`{"status":"ok","model_path":"D:\\models\\m3e-base","model_name":"moka-ai/m3e-base","dimension":768}`
+
+3. Rerank 服务健康检查
+测试接口：`GET http://127.0.0.1:8003/health`
+测试结果：通过
+返回结果：
+`{"status":"ok","model_path":"BAAI/bge-reranker-v2-m3","model_name":"BAAI/bge-reranker-v2-m3","backend":"cross_encoder"}`
+
+4. MySQL 连接测试
+测试方式：直接连接 `ragdata` 数据库并查询 `roles` 表记录数
+测试结果：通过
+结果说明：当前 `roles` 表中共有 5 条角色记录
+
+5. Redis 连接测试
+测试方式：执行 `PING`
+测试结果：通过
+结果说明：返回 `True`
+
+6. Embedding 真实推理测试
+测试接口：`POST http://127.0.0.1:8002/embeddings`
+测试输入：
+- “高血压患者如何控制饮食？”
+- “糖尿病患者如何控制饮食？”
+测试结果：通过
+结果说明：成功返回两条 embedding 结果，说明本地 embedding 模型已实际加载并可推理
+
+7. Rerank 真实推理测试
+测试接口：`POST http://127.0.0.1:8003/rerank`
+测试 query：`高血压患者饮食注意什么`
+测试 documents：
+- 高血压患者应减少钠盐摄入，多吃蔬菜水果。
+- 糖尿病患者要关注血糖波动和碳水控制。
+- 感冒患者要多休息多喝水。
+测试结果：通过
+结果说明：服务返回排序结果，说明本地 rerank 模型已实际加载并可推理
+
+8. 角色列表接口测试
+测试接口：`GET http://127.0.0.1:8001/roles`
+测试结果：通过
+结果说明：可正常返回 5 个角色，包含：
+- doctor
+- psychologist
+- legal_consultant
+- virtual_friend
+- wealth_advisor
+
+9. 用户创建接口测试
+测试接口：`POST http://127.0.0.1:8001/users`
+测试结果：通过
+结果说明：接口返回 200，可正常创建测试用户
+
+10. Doctor 角色知识检索测试
+测试方式：直接通过检索器和 Milvus 查询 `role_id=doctor`
+测试结果：失败
+结果说明：
+- `doctor` 角色在 MySQL 中存在
+- 但在 Milvus 的 `role_knowledge` 集合中，`doctor` 角色知识数量为 0
+- 因此 doctor 角色当前无法获得知识增强结果
+
+11. 各角色知识库分布测试
+测试结果如下：
+- doctor：0 条
+- psychologist：3 条
+- legal_consultant：3 条
+- virtual_friend：3 条
+- wealth_advisor：3 条
+
+结论：
+当前知识库数据分布不完整，doctor 角色只有角色配置，没有对应知识文档。
+
+12. 非流式聊天真实测试
+测试接口：`POST http://127.0.0.1:8001/chat`
+测试角色：doctor
+测试问题：`我最近血压有点高，日常饮食需要注意什么？请分点回答。`
+测试结果：失败
+返回结果：HTTP 500
+
+13. 流式聊天真实测试
+测试接口：`POST http://127.0.0.1:8001/chat/stream`
+测试角色：doctor
+测试问题：`我最近血压有点高，日常饮食需要注意什么？请分点回答。`
+测试结果：失败
+返回结果：
+`{"type": "error", "detail": "Upstream LLM stream failed: provider=siliconflow, model=Qwen/Qwen2.5-7B-Instruct, status=401, body="}`
+
+三、日志定位结果
+
+根据 `logs/app.log` 中 2026-05-29 14:16:50 的真实日志，当前失败原因已明确定位：
+
+1. 主应用已实际调用上游大模型接口：
+`https://api.siliconflow.cn/v1/chat/completions`
+
+2. 上游返回错误：
+`401 Unauthorized`
+
+3. 因此可以确认：
+- 当前失败不是本地主应用没启动
+- 不是 embedding 服务未启动
+- 不是 rerank 服务未启动
+- 不是 Redis / MySQL / Milvus 连接失败
+- 而是上游大模型鉴权未通过
+
+四、真实测试结论
+
+本次真实联调测试结论如下：
+
+1. 项目本地依赖服务运行正常
+MySQL、Redis、Milvus、Embedding、Rerank、主应用均已启动并可响应真实请求。
+
+2. RAG 链路前半段基本可用
+知识检索、embedding、rerank、用户创建、角色查询等链路可正常工作。
+
+3. 主聊天链路当前未真正打通
+当前项目在真实大模型调用阶段失败，原因是 `siliconflow` 上游返回 `401 Unauthorized`。
+
+4. Doctor 角色存在知识库缺失问题
+该角色在配置中存在，但在 Milvus 中没有对应知识文档，因此即使上游大模型鉴权修复，doctor 角色当前也无法获得完整的 RAG 增强结果。
+
+5. 非流式接口异常处理不够完善
+当前 `/chat` 直接返回 HTTP 500，而 `/chat/stream` 会返回结构化错误事件。说明非流式接口在异常兜底方面仍需补强。
+
+五、当前项目最真实的状态判断
+
+如果按“是否真正完成真实联调测试”来判断，本项目现在可以认为：
+
+1. 已完成基础服务层和本地模型层的真实测试
+2. 已完成部分 API 层的真实测试
+3. 尚未完成完整对话链路的真实成功验证
+
+因此，目前不能表述为“整套 RAG 系统已经真实测试通过”，更准确的表达应该是：
+
+“项目已完成主要基础服务和本地推理组件的真实联调测试，但在真实大模型调用与部分角色知识数据完整性方面仍存在待修复问题，完整聊天链路尚未通过最终验证。”
+
+六、建议下一步处理顺序
+
+1. 优先修复上游大模型 `401 Unauthorized`
+检查 `LLM_API_KEY` 是否失效、错误、余额不足或账号权限异常。
+
+2. 补齐 doctor 角色知识库
+当前 doctor 角色无 Milvus 知识数据，需要补录或重新导入对应知识文档。
+
+3. 优化 `/chat` 的异常处理
+建议将非流式接口也改成可读错误返回，而不是直接 500。
+
+4. 修复后再次执行完整真实测试
+修复完成后，重新测试：
+- `/chat`
+- `/chat/stream`
+- doctor 角色
+- 至少一个已有知识的角色，如 psychologist
+
+七、一句话总结
+
+这次测试已经证明项目“不是没跑起来”，而是“本地服务都通了，但真实上游大模型鉴权失败，同时 doctor 角色知识库为空”，因此完整 RAG 闭环目前还没有真正测试成功。

@@ -1,0 +1,623 @@
+RAG 项目 Ubuntu 部署文档（按当前仓库整理）
+
+文档生成时间：2026-05-29
+项目仓库：origin = https://github.com/Lyh1221/RAG.git
+默认分支：main
+当前项目主服务：
+1. 主应用：main.py，默认端口 8001
+2. Embedding 服务：local_embedding_service.py，默认端口 8002
+3. Rerank 服务：local_rerank_service.py，默认端口 8003
+4. Milvus：19530
+5. Redis：6379
+6. MySQL：3306
+
+一、先说明本项目和部署边界
+
+1. 这份文档是按你当前仓库真实代码整理的，不是通用模板。
+2. 主应用通过 OpenAI 兼容接口访问大模型，因此本地部署 vLLM 或 SGLang 都可以直接接入。
+3. 当前仓库里的 local_embedding_service.py 和 local_rerank_service.py 代码里模型加载设备写的是 CPU，不会自动吃 GPU。
+4. 所以：
+   - vLLM / SGLang 可以跑在 GPU 上
+   - 本项目自带 embedding / rerank 服务默认还是 CPU
+5. 如果后面你想把 embedding / rerank 也改成 GPU，需要再改代码里的 device 参数。
+6. 当前 .env 里有真实密钥类内容，部署到服务器前请全部替换成你自己的值，不要直接照搬。
+
+二、建议的服务器规格
+
+1. Ubuntu 22.04 LTS 或 24.04 LTS
+2. NVIDIA 驱动已正确安装
+3. nvidia-smi 可以正常执行
+4. 至少 16GB 内存，推荐 32GB+
+5. 有 GPU 时优先把 vLLM / SGLang 放到 GPU
+6. 系统盘和模型盘建议至少预留 100GB
+
+三、目录规划
+
+下面用 /opt/rag 作为统一工作目录：
+
+```bash
+sudo mkdir -p /opt/rag
+sudo mkdir -p /opt/rag/packages
+sudo mkdir -p /opt/rag/releases
+sudo mkdir -p /opt/rag/runtime
+sudo mkdir -p /opt/rag/models
+sudo mkdir -p /opt/rag/logs
+sudo mkdir -p /opt/rag/mysql
+sudo mkdir -p /opt/rag/redis
+sudo mkdir -p /opt/rag/hf-cache
+sudo chown -R $USER:$USER /opt/rag
+```
+
+四、Ubuntu 安装 Docker
+
+下面是官方 apt 仓库方式，适合 Ubuntu 22.04 / 24.04：
+
+```bash
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+docker --version
+docker compose version
+docker run --rm hello-world
+```
+
+五、CUDA + PyTorch（GPU 版）
+
+1. 先确认驱动：
+
+```bash
+nvidia-smi
+```
+
+2. 本项目 requirements.txt 里没有单独写 torch，但 sentence-transformers 运行时会依赖 torch。
+3. 推荐先创建 Python 环境，再单独装 GPU 版 torch。
+4. 如果你的服务器环境是 CUDA 12.4 兼容栈，可直接执行下面命令；如果不是，请把 cu124 改成与你机器匹配的版本。
+
+六、Python 环境两种方案
+
+方案 A：推荐 uv
+
+1. 安装 uv：
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.local/bin/env
+uv --version
+```
+
+2. 创建项目虚拟环境：
+
+```bash
+cd /opt/rag/runtime/RAG
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+```
+
+3. 安装 GPU 版 PyTorch：
+
+```bash
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+```
+
+4. 安装项目依赖：
+
+```bash
+uv pip install -r requirements.txt
+```
+
+方案 B：Anaconda / Miniconda
+
+```bash
+conda create -n rag python=3.12 -y
+conda activate rag
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+pip install -r requirements.txt
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+```
+
+七、拉取 Git 最新代码
+
+方式 1：服务器直接拉取
+
+```bash
+cd /opt/rag/runtime
+git clone https://github.com/Lyh1221/RAG.git
+cd RAG
+git checkout main
+git pull origin main
+```
+
+方式 2：你本地仓库打包后上传到服务器
+
+在有 Git 仓库的机器上执行：
+
+```bash
+cd /path/to/RAG
+git checkout main
+git pull origin main
+git archive --format=zip --output RAG-main.zip HEAD
+git archive --format=tar.gz --output RAG-main.tar.gz HEAD
+```
+
+说明：
+1. `git archive` 只打包当前 Git 跟踪文件，不包含 .git 目录。
+2. 如果你要把未提交文件也打进去，不能用 git archive，要改成普通压缩命令。
+
+八、创建工作目录并解压代码
+
+如果你上传的是 zip：
+
+```bash
+mkdir -p /opt/rag/releases/RAG-main
+unzip -o /opt/rag/packages/RAG-main.zip -d /opt/rag/releases/RAG-main
+rm -rf /opt/rag/runtime/RAG
+mv /opt/rag/releases/RAG-main /opt/rag/runtime/RAG
+```
+
+如果你上传的是 tar.gz：
+
+```bash
+mkdir -p /opt/rag/releases/RAG-main
+tar -xzf /opt/rag/packages/RAG-main.tar.gz -C /opt/rag/releases/RAG-main
+rm -rf /opt/rag/runtime/RAG
+mv /opt/rag/releases/RAG-main /opt/rag/runtime/RAG
+```
+
+九、准备 .env
+
+进入项目目录：
+
+```bash
+cd /opt/rag/runtime/RAG
+```
+
+如果仓库里没有适合服务器的 .env，请新建：
+
+```bash
+cat > /opt/rag/runtime/RAG/.env <<'EOF'
+APP_PORT=8001
+APP_HOST=0.0.0.0
+
+DB_BACKEND=mysql
+MYSQL_HOST=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_USER=root
+MYSQL_PASSWORD=your_mysql_password
+MYSQL_DATABASE=ragdata
+MYSQL_CHARSET=utf8mb4
+
+REDIS_ENABLED=true
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_DB=0
+
+MILVUS_ENABLED=true
+MILVUS_URI=http://127.0.0.1:19530
+MILVUS_TOKEN=
+
+LLM_PROVIDER=vllm
+LLM_MODEL_NAME=Qwen/Qwen2.5-7B-Instruct
+LLM_API_BASE=http://127.0.0.1:9000/v1
+LLM_API_KEY=EMPTY
+LLM_TIMEOUT=120
+LLM_MAX_TOKENS=1024
+LLM_TEMPERATURE=0.35
+LLM_TOP_P=0.9
+LLM_PRESENCE_PENALTY=0.2
+
+EMBEDDING_BACKEND=remote_api
+EMBEDDING_MODEL_NAME=moka-ai/m3e-base
+EMBEDDING_API_URL=http://127.0.0.1:8002/embeddings
+EMBEDDING_API_KEY=
+EMBEDDING_API_TIMEOUT=30
+EMBEDDING_DIMENSION=768
+LOCAL_EMBEDDING_MODEL_PATH=/opt/rag/models/m3e-base
+LOCAL_EMBEDDING_SERVICE_HOST=0.0.0.0
+LOCAL_EMBEDDING_SERVICE_PORT=8002
+
+RERANK_BACKEND=remote_api
+RERANK_MODEL_NAME=BAAI/bge-reranker-v2-m3
+RERANK_API_URL=http://127.0.0.1:8003/rerank
+RERANK_API_KEY=
+RERANK_API_TIMEOUT=30
+LOCAL_RERANK_MODEL_PATH=BAAI/bge-reranker-v2-m3
+LOCAL_RERANK_SERVICE_HOST=0.0.0.0
+LOCAL_RERANK_SERVICE_PORT=8003
+
+PDF_AUTO_IMPORT_ENABLED=true
+PDF_AUTO_IMPORT_DEFAULT_ROLE_ID=doctor
+PDF_PARSER_BACKEND=pymupdf
+MINERU_API_URL=
+MINERU_API_TOKEN=
+MINERU_BACKEND=hybrid-auto-engine
+MINERU_PARSE_METHOD=auto
+MINERU_LANGUAGE=ch
+MINERU_FORMULA_ENABLE=true
+MINERU_TABLE_ENABLE=true
+MINERU_IMAGE_ANALYSIS=true
+MINERU_TIMEOUT=300
+EOF
+```
+
+十、部署 Redis / MySQL / Milvus
+
+1. Redis
+
+```bash
+docker rm -f rag-redis 2>/dev/null || true
+docker run -d \
+  --name rag-redis \
+  --restart unless-stopped \
+  -p 6379:6379 \
+  -v /opt/rag/redis:/data \
+  redis:7-alpine
+```
+
+2. MySQL
+
+```bash
+docker rm -f rag-mysql 2>/dev/null || true
+docker run -d \
+  --name rag-mysql \
+  --restart unless-stopped \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=your_mysql_password \
+  -e MYSQL_DATABASE=ragdata \
+  -v /opt/rag/mysql:/var/lib/mysql \
+  mysql:8.4
+```
+
+3. Milvus
+
+本仓库已经自带 `docker-compose.milvus.yml`，直接使用：
+
+```bash
+cd /opt/rag/runtime/RAG
+docker compose -f docker-compose.milvus.yml up -d
+```
+
+查看状态：
+
+```bash
+docker ps
+```
+
+十一、初始化数据库和知识库
+
+先进入 Python 环境：
+
+uv 方案：
+
+```bash
+cd /opt/rag/runtime/RAG
+source .venv/bin/activate
+```
+
+conda 方案：
+
+```bash
+cd /opt/rag/runtime/RAG
+conda activate rag
+```
+
+执行初始化：
+
+```bash
+python scripts/init_mysql.py
+python scripts/init_milvus.py
+python scripts/load_demo_data.py
+```
+
+说明：
+1. `scripts/init_mysql.py` 会初始化 users 和 roles 表。
+2. `scripts/init_milvus.py` 会初始化 `role_knowledge` 和 `user_long_memory`。
+3. `scripts/load_demo_data.py` 会把 seed 数据写入 MySQL 和 Milvus。
+
+十二、本地大模型部署方式 1：vLLM
+
+推荐给主对话模型使用，当前项目可直接接 OpenAI 兼容接口。
+
+1. 创建单独环境：
+
+```bash
+cd /opt/rag
+uv venv vllm-env --python 3.12 --seed
+source /opt/rag/vllm-env/bin/activate
+uv pip install vllm --torch-backend=auto
+```
+
+2. 启动 vLLM：
+
+```bash
+export HF_HOME=/opt/rag/hf-cache
+vllm serve Qwen/Qwen2.5-7B-Instruct \
+  --host 0.0.0.0 \
+  --port 9000 \
+  --dtype auto \
+  --gpu-memory-utilization 0.90
+```
+
+3. 项目 .env 里大模型配置写成：
+
+```env
+LLM_PROVIDER=vllm
+LLM_MODEL_NAME=Qwen/Qwen2.5-7B-Instruct
+LLM_API_BASE=http://127.0.0.1:9000/v1
+LLM_API_KEY=EMPTY
+```
+
+十三、本地大模型部署方式 2：SGLang
+
+SGLang 也支持 OpenAI 兼容接口，可以替代 vLLM。
+
+1. 创建单独环境：
+
+```bash
+cd /opt/rag
+uv venv sglang-env --python 3.12 --seed
+source /opt/rag/sglang-env/bin/activate
+uv pip install "sglang" --prerelease=allow
+```
+
+2. 启动 SGLang：
+
+```bash
+export HF_HOME=/opt/rag/hf-cache
+python -m sglang.launch_server \
+  --model-path Qwen/Qwen2.5-7B-Instruct \
+  --host 0.0.0.0 \
+  --port 9000
+```
+
+3. 项目 .env 里大模型配置写成：
+
+```env
+LLM_PROVIDER=sglang
+LLM_MODEL_NAME=Qwen/Qwen2.5-7B-Instruct
+LLM_API_BASE=http://127.0.0.1:9000/v1
+LLM_API_KEY=EMPTY
+```
+
+十四、启动 embedding / rerank / main
+
+回到项目环境：
+
+```bash
+cd /opt/rag/runtime/RAG
+source .venv/bin/activate
+mkdir -p logs
+```
+
+1. 启动 embedding 服务
+
+```bash
+nohup python local_embedding_service.py > logs/embedding.log 2>&1 &
+```
+
+2. 启动 rerank 服务
+
+```bash
+nohup python local_rerank_service.py > logs/rerank.log 2>&1 &
+```
+
+3. 启动主应用
+
+```bash
+nohup python main.py > logs/main.log 2>&1 &
+```
+
+十五、健康检查
+
+```bash
+curl http://127.0.0.1:8002/health
+curl http://127.0.0.1:8003/health
+curl http://127.0.0.1:8001/health
+```
+
+浏览器访问：
+
+```text
+http://127.0.0.1:8001/
+http://127.0.0.1:8001/workspace
+```
+
+如果是局域网访问，把 127.0.0.1 换成服务器 IP。
+
+十六、PDF 自动导入和离线导入
+
+1. 自动导入目录：
+
+```text
+data/raw_pdfs/
+```
+
+2. 推荐按角色目录放：
+
+```text
+data/raw_pdfs/doctor/xxx.pdf
+```
+
+3. 离线导入命令示例：
+
+```bash
+python scripts/import_pdf_knowledge.py \
+  --pdf-path "/opt/rag/runtime/RAG/data/raw_pdfs/doctor/example.pdf" \
+  --role-id doctor
+```
+
+十七、一键部署脚本示例
+
+下面脚本适合在一台全新的 Ubuntu 机器上跑一遍，前提是你已经确认有 NVIDIA 驱动并且 `nvidia-smi` 正常。
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_ROOT=/opt/rag/runtime/RAG
+PKG_ROOT=/opt/rag/packages
+
+sudo mkdir -p /opt/rag /opt/rag/packages /opt/rag/releases /opt/rag/runtime /opt/rag/models /opt/rag/logs /opt/rag/mysql /opt/rag/redis /opt/rag/hf-cache
+sudo chown -R "$USER:$USER" /opt/rag
+
+sudo apt update
+sudo apt install -y git unzip tar ca-certificates curl gnupg lsb-release
+
+if ! command -v docker >/dev/null 2>&1; then
+  sudo install -m 0755 -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt update
+  sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  sudo systemctl enable docker
+  sudo systemctl start docker
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+cd /opt/rag/runtime
+if [ ! -d RAG ]; then
+  git clone https://github.com/Lyh1221/RAG.git
+fi
+
+cd /opt/rag/runtime/RAG
+git checkout main
+git pull origin main
+
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+uv pip install -r requirements.txt
+
+docker rm -f rag-redis 2>/dev/null || true
+docker run -d --name rag-redis --restart unless-stopped -p 6379:6379 -v /opt/rag/redis:/data redis:7-alpine
+
+docker rm -f rag-mysql 2>/dev/null || true
+docker run -d --name rag-mysql --restart unless-stopped -p 3306:3306 -e MYSQL_ROOT_PASSWORD=your_mysql_password -e MYSQL_DATABASE=ragdata -v /opt/rag/mysql:/var/lib/mysql mysql:8.4
+
+docker compose -f docker-compose.milvus.yml up -d
+
+python scripts/init_mysql.py
+python scripts/init_milvus.py
+python scripts/load_demo_data.py
+
+nohup python local_embedding_service.py > logs/embedding.log 2>&1 &
+nohup python local_rerank_service.py > logs/rerank.log 2>&1 &
+nohup python main.py > logs/main.log 2>&1 &
+
+echo "Done"
+echo "health: http://127.0.0.1:8001/health"
+echo "workspace: http://127.0.0.1:8001/workspace"
+```
+
+十八、建议的启动顺序
+
+1. GPU 大模型服务：vLLM 或 SGLang
+2. Redis
+3. MySQL
+4. Milvus
+5. local_embedding_service.py
+6. local_rerank_service.py
+7. main.py
+
+十九、排错建议
+
+1. 如果 `python scripts/init_mysql.py` 报数据库连接错误，优先检查：
+   - MySQL 容器是否启动
+   - `.env` 中密码是否一致
+   - `MYSQL_DATABASE` 是否为 `ragdata`
+
+2. 如果 `python scripts/init_milvus.py` 失败，优先检查：
+   - `docker compose -f docker-compose.milvus.yml ps`
+   - 19530 端口是否可达
+   - `.env` 中 `MILVUS_URI` 是否为 `http://127.0.0.1:19530`
+
+3. 如果 embedding 服务启动后报模型问题，优先检查：
+   - `/opt/rag/models/m3e-base` 是否存在
+   - `LOCAL_EMBEDDING_MODEL_PATH` 是否正确
+
+4. 如果 rerank 服务启动慢或加载失败：
+   - 当前代码会优先尝试加载 `BAAI/bge-reranker-v2-m3`
+   - 加载失败会降级成 heuristic 模式
+
+5. 如果主应用能启动但聊天失败，优先检查：
+   - `LLM_API_BASE` 是否真的能访问到 `/v1/chat/completions`
+   - vLLM / SGLang 是否已经监听在 9000 端口
+   - `LLM_API_KEY` 是否与目标服务匹配
+
+二十、当前项目最关键的真实配置点
+
+1. 当前项目 `EMBEDDING_DIMENSION` 是 768。
+2. Milvus collection 会按 embedding 维度检查 schema。
+3. 主应用只要拿到 OpenAI 兼容的 chat/completions 接口即可工作。
+4. 当前仓库里 Windows 有 `start-stack.ps1`，但那是 Windows 方案，不适合 Ubuntu，Linux 请按本文件执行。
+
+二十一、推荐的生产化补充
+
+1. 后续建议把 embedding、rerank、main、vLLM/SGLang 都改成 systemd 托管。
+2. 建议用 Nginx 反向代理 8001。
+3. 建议把 `.env`、模型目录、数据库目录和日志目录做备份。
+4. 建议把 MySQL root 密码、模型 API Key 放进环境管理或 secrets，不要写死。
+
+二十二、官方参考链接
+
+1. Docker Ubuntu 安装：
+https://docs.docker.com/engine/install/ubuntu/
+
+2. uv 安装：
+https://docs.astral.sh/uv/getting-started/installation/
+
+3. vLLM Quickstart：
+https://docs.vllm.ai/en/stable/getting_started/quickstart.html
+
+4. SGLang 安装：
+https://docs.sglang.ai/get_started/install.html
+
+5. SGLang OpenAI 兼容接口：
+https://docs.sglang.ai/basic_usage/openai_api.html
+
+二十三、最终可运行的最小命令清单
+
+```bash
+cd /opt/rag/runtime
+git clone https://github.com/Lyh1221/RAG.git
+cd RAG
+
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+uv pip install -r requirements.txt
+
+docker run -d --name rag-redis --restart unless-stopped -p 6379:6379 redis:7-alpine
+docker run -d --name rag-mysql --restart unless-stopped -p 3306:3306 -e MYSQL_ROOT_PASSWORD=your_mysql_password -e MYSQL_DATABASE=ragdata mysql:8.4
+docker compose -f docker-compose.milvus.yml up -d
+
+python scripts/init_mysql.py
+python scripts/init_milvus.py
+python scripts/load_demo_data.py
+
+nohup python local_embedding_service.py > logs/embedding.log 2>&1 &
+nohup python local_rerank_service.py > logs/rerank.log 2>&1 &
+nohup python main.py > logs/main.log 2>&1 &
+```
+
+如果你还要接本地大模型，再额外启动 vLLM 或 SGLang，并把 `.env` 中 `LLM_API_BASE` 指向它们即可。

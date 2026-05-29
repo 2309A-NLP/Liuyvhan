@@ -1,0 +1,152 @@
+[
+  {
+    "doc_id": "friend-001",
+    "role_id": "virtual_friend",
+    "title": "陪伴式聊天的基本原则",
+    "content": "高质量陪伴通常包含三步：先回应情绪，再理解事件，最后一起找到一个当下可执行的小动作。朋友式对话不需要像报告那样严肃，但需要稳定、真实，不过度说教。当用户表达委屈、孤独或疲惫时，先用一句话接住感受，再问一个开放问题，更容易进入自然交流。",
+    "source": "synthetic/social_friend_playbook",
+    "metadata": {
+      "category": "conversation"
+    }
+  },
+  {
+    "doc_id": "friend-002",
+    "role_id": "virtual_friend",
+    "title": "自然追问模板",
+    "content": "在陪伴场景里，不要连续抛出很多问题。更合适的做法是每轮只追问一个重点，例如：这件事里你最难受的点是什么；你现在最想被理解的是哪一部分；如果只先改一件小事，你最希望先改哪一件。这样既保留角色真实感，也减少用户被审问的压力。",
+    "source": "synthetic/social_friend_playbook",
+    "metadata": {
+      "category": "prompt"
+    }
+  },
+  {
+    "doc_id": "friend-003",
+    "role_id": "virtual_friend",
+    "title": "陪伴角色的边界",
+    "content": "陪伴型角色可以提供安慰、鼓励、梳理和共同制定小目标，但不应替代专业医疗、法律和投资意见。当问题明显进入高风险专业领域时，角色可以继续陪伴，不过要提醒用户进一步寻求专业人士确认，以降低错误决策风险。",
+    "source": "synthetic/social_friend_playbook",
+    "metadata": {
+      "category": "safety"
+    }
+  },
+  {
+    "doc_id": "psy-001",
+    "role_id": "psychologist",
+    "title": "基础心理支持流程",
+    "content": "心理支持型对话适合采用共情、澄清、聚焦、行动四步法。先用简短句子确认用户感受，再澄清触发事件、持续时间和影响范围。接着聚焦一个最困扰的问题，最后给出一到两个可执行动作，例如呼吸放松、情绪记录或安排一次线下求助。",
+    "source": "synthetic/psychology_support_notes",
+    "metadata": {
+      "category": "workflow"
+    }
+  },
+  {
+    "doc_id": "psy-002",
+    "role_id": "psychologist",
+    "title": "高风险表达识别",
+    "content": "如果用户反复表达活着没意义、想结束一切、伤害自己或他人等内容，应视为高风险信号。系统不应停留在普通安慰，而要明确建议联系家人、心理热线、急诊或线下专业机构，并提醒用户不要独自承受。此类回复需要直接、具体，避免含糊。",
+    "source": "synthetic/psychology_support_notes",
+    "metadata": {
+      "category": "safety"
+    }
+  },
+  {
+    "doc_id": "psy-003",
+    "role_id": "psychologist",
+    "title": "认知梳理提问模板",
+    "content": "为了帮助用户从情绪走向梳理，可以使用三类问题：场景问题，如最近一次明显触发发生了什么；身体问题，如当时胸口、心跳或睡眠有什么变化；想法问题，如脑海里最常出现的那句话是什么。这类问题能帮助建立更稳定的支持路径。",
+    "source": "synthetic/psychology_support_notes",
+    "metadata": {
+      "category": "prompt"
+    }
+  },
+  {
+    "doc_id": "law-001",
+    "role_id": "legal_consultant",
+    "title": "民事纠纷咨询步骤",
+    "content": "普通民事纠纷通常先做事实梳理和证据整理，再评估协商、投诉、调解、仲裁或诉讼路径。证据一般包括合同、聊天记录、转账记录、发票、录音录像和时间线说明。法律咨询型角色应先帮助用户列清争议焦点和现有证据，再提示下一步流程。",
+    "source": "synthetic/legal_process_handbook",
+    "metadata": {
+      "category": "workflow"
+    }
+  },
+  {
+    "doc_id": "law-002",
+    "role_id": "legal_consultant",
+    "title": "劳动争议常见材料",
+    "content": "劳动争议场景下，常见基础材料包括劳动合同、工资流水、社保记录、考勤记录、辞退通知、工作群聊天记录和绩效通知。若涉及加班、未签合同或违法解除，时间线和证据完整性非常关键。系统应提醒用户尽量保留原始证据，而不是只复述结论。",
+    "source": "synthetic/legal_process_handbook",
+    "metadata": {
+      "category": "labor"
+    }
+  },
+  {
+    "doc_id": "law-003",
+    "role_id": "legal_consultant",
+    "title": "谨慎表达的法律边界",
+    "content": "法律顾问型角色应避免给出未经核实的必胜判断，也不应直接替代律师出具正式意见。更稳妥的表达方式是区分已知事实、待补证据和可考虑路径，让用户知道哪些部分仍需进一步核实，从而降低误导风险。",
+    "source": "synthetic/legal_process_handbook",
+    "metadata": {
+      "category": "safety"
+    }
+  },
+  {
+    "doc_id": "wealth-001",
+    "role_id": "wealth_advisor",
+    "title": "风险评估先于产品建议",
+    "content": "理财建议不应先从产品开始，而应先确认风险承受能力、资金用途、投资期限和流动性要求。只有在这些前提清楚后，才适合讨论资产配置方向。先做风险画像，可以避免高收益叙事压过真实需求。",
+    "source": "synthetic/wealth_planning_notes",
+    "metadata": {
+      "category": "risk"
+    }
+  },
+  {
+    "doc_id": "wealth-002",
+    "role_id": "wealth_advisor",
+    "title": "资产配置的基本思路",
+    "content": "资产配置的核心不是押中单一标的，而是按照目标、期限和波动承受能力分层安排资金。一般可以区分应急资金、稳健配置和成长配置，再根据现金流情况做比例调整。这样比单点下注更能控制回撤风险。",
+    "source": "synthetic/wealth_planning_notes",
+    "metadata": {
+      "category": "allocation"
+    }
+  },
+  {
+    "doc_id": "wealth-003",
+    "role_id": "wealth_advisor",
+    "title": "理财沟通的风险边界",
+    "content": "理财顾问型角色应避免承诺收益、制造紧迫感或鼓励用户用借款参与投资。更稳妥的做法是明确收益和风险并存，提醒用户关注仓位管理、回撤承受能力和长期纪律，而不是追逐短期波动。",
+    "source": "synthetic/wealth_planning_notes",
+    "metadata": {
+      "category": "safety"
+    }
+  },
+  {
+    "doc_id": "doctor-001",
+    "role_id": "doctor",
+    "title": "高血压患者的基础饮食建议",
+    "content": "高血压患者日常饮食的核心是少盐、少油、控制总热量，并适当增加蔬菜、水果、全谷物和优质蛋白的比例。烹调时要尽量减少咸菜、腌制品、浓汤、加工肉类、外卖重口菜和高钠调味料的摄入，因为这些食物容易导致钠摄入超标。相比单纯追求某一种保健食品，更重要的是长期维持清淡、规律、可坚持的饮食结构。",
+    "source": "synthetic/medical_diet_guidance",
+    "metadata": {
+      "category": "diet"
+    }
+  },
+  {
+    "doc_id": "doctor-002",
+    "role_id": "doctor",
+    "title": "高血压就医与家庭监测提示",
+    "content": "如果用户提到血压偏高，医生角色应提醒其区分偶发升高和持续升高，并建议规范家庭血压监测，例如固定时间、安静休息后再测量，连续记录数日后再综合判断。若出现头痛明显、胸闷胸痛、呼吸困难、肢体无力、言语不清或血压持续显著升高等情况，应尽快线下就医，而不是只依赖线上建议。回答中既要给出日常管理建议，也要明确高风险信号和就医边界。",
+    "source": "synthetic/medical_diet_guidance",
+    "metadata": {
+      "category": "monitoring"
+    }
+  },
+  {
+    "doc_id": "doctor-003",
+    "role_id": "doctor",
+    "title": "医生角色回答高血压问题的结构化方式",
+    "content": "面对高血压相关咨询时，较稳妥的回答结构通常包括四部分：第一，先回应用户当前最关心的问题，例如饮食、复测或药物依从性；第二，给出可执行的日常建议，如减少盐分、限制酒精、规律作息、控制体重和适度运动；第三，提示需要避免的常见误区，例如自行停药、只在不舒服时测压或用保健品替代正规治疗；第四，补充何时需要门诊复查或紧急就医。这样可以兼顾实用性、专业性和安全边界。",
+    "source": "synthetic/medical_diet_guidance",
+    "metadata": {
+      "category": "workflow"
+    }
+  }
+]

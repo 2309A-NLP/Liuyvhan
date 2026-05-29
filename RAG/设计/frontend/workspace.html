@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Role Studio 工作台</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="stylesheet" href="/static/styles.css?v=20260429b">
+</head>
+<body class="workspace-page">
+    <div class="site-bg"></div>
+    <div class="page-shell">
+        <header class="site-header workspace-header">
+            <a class="brand-mark" href="/">
+                <span class="brand-mark-kicker">专注对话与会话管理</span>
+                <strong>RAG Role Studio</strong>
+            </a>
+            <nav class="site-nav">
+                <a href="/">首页</a>
+                <a href="/workspace" aria-current="page">工作台</a>
+            </nav>
+            <button type="button" class="ghost-btn mobile-rail-toggle" id="rail-toggle">打开侧栏</button>
+        </header>
+
+        <main class="workspace-layout">
+            <aside class="control-rail" id="control-rail">
+                <section class="panel-card setup-panel">
+                    <div class="section-head compact-head">
+                        <div>
+                            <span class="eyebrow">Account</span>
+                            <h2>账户</h2>
+                        </div>
+                    </div>
+
+                    <div class="identity-card identity-card-compact">
+                        <div class="identity-avatar" id="user-avatar">未</div>
+                        <div class="identity-copy">
+                            <strong id="user-display-name">未登录</strong>
+                            <span id="login-tag">请先进入一个身份。</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-strip">
+                        <div class="meta-pill">
+                            <span>用户 ID</span>
+                            <strong id="user-id-value">-</strong>
+                        </div>
+                        <div class="meta-pill">
+                            <span>当前角色</span>
+                            <strong id="selected-role-label">未选择</strong>
+                        </div>
+                    </div>
+
+                    <form id="user-form" class="inline-form">
+                        <input id="name-input" name="name" type="text" placeholder="输入名称后进入">
+                        <button type="submit" class="primary-btn">进入</button>
+                    </form>
+
+                    <div class="action-row">
+                        <button type="button" class="secondary-btn grow-btn" id="guest-login-btn">游客进入</button>
+                        <button type="button" class="text-btn" id="logout-btn">退出</button>
+                    </div>
+                </section>
+
+                <section class="panel-card session-panel">
+                    <div class="section-head compact-head">
+                        <div>
+                            <span class="eyebrow">Sessions</span>
+                            <h2>会话</h2>
+                        </div>
+                        <button type="button" class="secondary-btn compact-btn" id="new-session-btn">新建会话</button>
+                    </div>
+
+                    <div class="session-brief session-brief-compact">
+                        <div>
+                            <span>当前会话</span>
+                            <strong id="active-session-name">未开始</strong>
+                        </div>
+                        <div class="session-brief-metric">
+                            <span>记忆条数</span>
+                            <strong id="memory-size">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="meta-strip meta-strip-single">
+                        <div class="meta-pill">
+                            <span>会话 ID</span>
+                            <strong id="session-id-value">-</strong>
+                        </div>
+                    </div>
+
+                    <div class="session-stack" id="session-list">
+                        <article class="placeholder-card">
+                            <strong>暂无会话</strong>
+                            <p>点击角色或“新建会话”后，这里会显示你的会话列表。</p>
+                        </article>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="workspace-main">
+                <section class="panel-card role-switcher">
+                    <div class="section-head role-switcher-head">
+                        <div>
+                            <span class="eyebrow">Roles</span>
+                            <h2>四个角色入口</h2>
+                        </div>
+                        <p class="section-note">点击任意角色，会自动新建一个专属会话。</p>
+                    </div>
+                    <div class="role-grid role-grid-main" id="role-list">
+                        <article class="placeholder-card">
+                            <strong>正在加载角色</strong>
+                            <p>稍后会显示四个可用角色。</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="chat-shell panel-card">
+                    <div class="chat-shell-head">
+                        <div class="chat-shell-copy">
+                            <span class="eyebrow">Chat</span>
+                            <h1 id="chat-title">开始新的角色对话</h1>
+                            <p id="chat-subtitle">先选择角色，再输入你的问题，系统会自动创建并绑定当前会话。</p>
+                        </div>
+                        <div class="workspace-status">
+                            <div class="status-pill" id="health-badge">
+                                <span>系统状态</span>
+                                <strong id="health-status">检查中</strong>
+                            </div>
+                            <span class="status-meta" id="health-meta">等待服务响应。</span>
+                        </div>
+                    </div>
+
+                    <div class="message-list" id="message-list">
+                        <article class="placeholder-card chat-placeholder">
+                            <strong>工作台已就绪</strong>
+                            <p>选择角色后，直接输入问题即可开始。</p>
+                        </article>
+                    </div>
+
+                    <form id="chat-form" class="composer-card">
+                        <textarea id="message-input" rows="4" placeholder="例如：请从律师的角度帮我梳理这件事，我下一步应该怎么做？"></textarea>
+                        <div class="composer-footer">
+                            <span class="composer-hint" id="composer-tip">登录并选择角色后，按 Enter 发送，Shift + Enter 换行。</span>
+                            <button type="submit" class="primary-btn" id="send-btn" disabled>发送</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="panel-card reference-shell">
+                    <div class="section-head">
+                        <div>
+                            <span class="eyebrow">Knowledge</span>
+                            <h2>知识引用</h2>
+                        </div>
+                    </div>
+                    <div class="reference-grid" id="references-list">
+                        <article class="placeholder-card">
+                            <strong>暂无引用</strong>
+                            <p>发送消息后，命中的知识片段会显示在这里。</p>
+                        </article>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/workspace.js?v=20260429b"></script>
+</body>
+</html>

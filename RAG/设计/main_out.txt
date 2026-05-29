@@ -1,0 +1,234 @@
+2026-05-18 19:13:17,974 | INFO | app | Redis(remote) connection_ready host=127.0.0.1 port=6379 db=0
+2026-05-18 19:13:17,974 | INFO | app | Redis backend=remote host=127.0.0.1 port=6379 db=0
+2026-05-18 19:13:18,537 | INFO | app | Milvus(remote) connection_ready uri=http://127.0.0.1:19530 alias=rag_role_studio_1595315451040
+2026-05-18 19:13:18,537 | INFO | app | Milvus backend=remote uri=http://127.0.0.1:19530
+2026-05-18 19:13:18,539 | INFO | app | Embedding backend=remote_api, configured_model=moka-ai/m3e-base, remote_enabled=True
+2026-05-18 19:13:18,539 | INFO | app | Rerank backend=remote_api, configured_model=BAAI/bge-reranker-v2-m3, remote_enabled=False
+2026-05-18 19:13:18,653 | INFO | app | Milvus(remote) collection_loaded name=user_long_memory entities=0
+2026-05-18 19:13:18,776 | INFO | app | Open the site root in a browser, not /static.
+2026-05-18 19:13:18,777 | INFO | app | Local URL: http://127.0.0.1:8001/
+2026-05-18 19:13:18,777 | INFO | app | Workspace URL: http://127.0.0.1:8001/workspace
+2026-05-18 19:13:18,778 | INFO | app | LAN URL: http://10.223.11.112:8001/
+2026-05-18 19:13:18,778 | INFO | app | LAN workspace URL: http://10.223.11.112:8001/workspace
+2026-05-18 19:13:18,815 | INFO | app | Redis(remote) connection_ready host=127.0.0.1 port=6379 db=0
+2026-05-18 19:13:18,815 | INFO | app | Redis backend=remote host=127.0.0.1 port=6379 db=0
+2026-05-18 19:13:18,818 | INFO | app | Milvus(remote) connection_ready uri=http://127.0.0.1:19530 alias=rag_role_studio_1595358143184
+2026-05-18 19:13:18,820 | INFO | app | Milvus backend=remote uri=http://127.0.0.1:19530
+2026-05-18 19:13:18,820 | INFO | app | Embedding backend=remote_api, configured_model=moka-ai/m3e-base, remote_enabled=True
+2026-05-18 19:13:18,820 | INFO | app | Rerank backend=remote_api, configured_model=BAAI/bge-reranker-v2-m3, remote_enabled=False
+2026-05-18 19:13:18,833 | INFO | app | Milvus(remote) collection_loaded name=user_long_memory entities=0
+INFO:     Started server process [1700]
+INFO:     Waiting for application startup.
+2026-05-18 19:13:18,961 | INFO | app | MySQL schema initialized at 127.0.0.1:3306/ragdata
+2026-05-18 19:13:19,019 | INFO | app | Milvus(remote) collection_loaded name=role_knowledge entities=263
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+2026-05-18 19:13:20,984 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=20
+2026-05-18 19:13:24,061 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=23
+2026-05-18 19:13:26,301 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=24
+2026-05-18 19:13:28,699 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=14
+2026-05-18 19:13:29,928 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=17
+2026-05-18 19:13:32,142 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=16
+2026-05-18 19:13:34,392 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=22
+INFO:     127.0.0.1:6703 - "GET /workspace HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6704 - "GET /static/workspace.js?v=20260429b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6703 - "GET /static/styles.css?v=20260429b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6704 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6703 - "GET /roles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6706 - "GET /static/favicon.svg HTTP/1.1" 200 OK
+2026-05-18 19:13:37,503 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=13
+2026-05-18 19:13:39,423 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=18
+INFO:     127.0.0.1:6703 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6703 - "GET /static/home.js?v=20260429b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6703 - "GET /health HTTP/1.1" 200 OK
+2026-05-18 19:13:41,595 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=19
+INFO:     127.0.0.1:6704 - "GET /roles HTTP/1.1" 200 OK
+2026-05-18 19:13:43,473 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=28
+2026-05-18 19:13:46,288 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=29
+2026-05-18 19:13:49,730 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=8
+2026-05-18 19:13:50,706 | INFO | app | Milvus(remote) collection_loaded name=role_knowledge entities=263
+2026-05-18 19:13:53,899 | INFO | app | Milvus(remote) documents_upserted collection=role_knowledge count=251
+2026-05-18 19:13:53,901 | INFO | app | PDF auto imported role_id=doctor path=C:\Users\刘禹含\Desktop\RAG\data\raw_pdfs\example.pdf chunks=251
+2026-05-18 19:13:53,910 | INFO | app | PDF auto import summary scanned=1 imported=1 skipped=0 failed=0
+INFO:     127.0.0.1:29156 - "GET /health HTTP/1.1" 200 OK
+2026-05-18 21:46:32,665 | INFO | app | Loaded 5 role profiles.
+2026-05-18 21:46:32,789 | INFO | app | Milvus(remote) collection_dropped name=role_knowledge
+2026-05-18 21:46:34,307 | INFO | app | Milvus(remote) collection_created name=role_knowledge dim=768
+2026-05-18 21:46:34,307 | INFO | app | Knowledge collection reset before reload. collection=role_knowledge
+2026-05-18 21:46:34,308 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:34,708 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:34,995 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:35,264 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:35,523 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:35,783 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:36,039 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:36,299 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:36,555 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:36,761 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:36,952 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:37,150 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:46:39,954 | INFO | app | Milvus(remote) documents_upserted collection=role_knowledge count=12
+2026-05-18 21:46:39,954 | INFO | app | Knowledge chunks stored collection=role_knowledge count=12
+INFO:     127.0.0.1:29176 - "POST /knowledge/reload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29181 - "POST /users HTTP/1.1" 200 OK
+2026-05-18 21:48:39,761 | INFO | app | Loaded 5 role profiles.
+2026-05-18 21:48:39,768 | INFO | app | Milvus(remote) collection_dropped name=role_knowledge
+2026-05-18 21:48:41,138 | INFO | app | Milvus(remote) collection_created name=role_knowledge dim=768
+2026-05-18 21:48:41,138 | INFO | app | Knowledge collection reset before reload. collection=role_knowledge
+2026-05-18 21:48:41,138 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:41,435 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:41,689 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:41,944 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:42,192 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:42,451 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:42,699 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:42,942 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:43,189 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:43,390 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:43,592 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:43,800 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:47,155 | INFO | app | Milvus(remote) documents_upserted collection=role_knowledge count=12
+2026-05-18 21:48:47,156 | INFO | app | Knowledge chunks stored collection=role_knowledge count=12
+INFO:     127.0.0.1:19893 - "POST /knowledge/reload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19893 - "POST /users HTTP/1.1" 200 OK
+2026-05-18 21:48:47,261 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=0
+2026-05-18 21:48:47,264 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:47,266 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:47,480 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我最近总是很焦虑，晚上睡不着。
+2026-05-18 21:48:47,555 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'psychologist'} hits=3 query=我最近总是很焦虑，晚上睡不着
+2026-05-18 21:48:47,564 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:49,989 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=1
+2026-05-18 21:48:49,992 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=2
+2026-05-18 21:48:49,994 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=2
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:48:50,004 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=2
+2026-05-18 21:48:50,006 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:50,008 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:50,224 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'psychologist'} hits=3 query=我最近总是很焦虑，晚上睡不着
+2026-05-18 21:48:50,224 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我最近总是很焦虑，晚上睡不着。
+2026-05-18 21:48:50,225 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:51,446 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=3
+2026-05-18 21:48:51,447 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=4
+2026-05-18 21:48:51,449 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=4
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:48:51,460 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=0
+2026-05-18 21:48:51,461 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:51,462 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:51,644 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'legal_consultant'} hits=3 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料
+2026-05-18 21:48:51,644 | INFO | app | Long-memory search user_id=eval-user hits=0 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料？
+2026-05-18 21:48:51,645 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:53,578 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=1
+2026-05-18 21:48:53,580 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=2
+2026-05-18 21:48:53,581 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=2
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:48:53,601 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=2
+2026-05-18 21:48:53,602 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:53,603 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:53,771 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'legal_consultant'} hits=3 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料
+2026-05-18 21:48:53,771 | INFO | app | Long-memory search user_id=eval-user hits=0 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料？
+2026-05-18 21:48:53,772 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:55,524 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=3
+2026-05-18 21:48:55,526 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=4
+2026-05-18 21:48:55,527 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=4
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:48:55,559 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=0
+2026-05-18 21:48:55,559 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:55,562 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:55,729 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我有十万块，两年后要用，能不能都买股票？
+2026-05-18 21:48:55,731 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'wealth_advisor'} hits=3 query=我有十万块，两年后要用，能不能都买股票
+2026-05-18 21:48:55,732 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:57,740 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=1
+2026-05-18 21:48:57,743 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=2
+2026-05-18 21:48:57,744 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=2
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:48:57,752 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=2
+2026-05-18 21:48:57,754 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:57,754 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:48:57,912 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'wealth_advisor'} hits=3 query=我有十万块，两年后要用，能不能都买股票
+2026-05-18 21:48:57,915 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我有十万块，两年后要用，能不能都买股票？
+2026-05-18 21:48:57,915 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:48:59,059 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=3
+2026-05-18 21:48:59,061 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=4
+2026-05-18 21:48:59,063 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=4
+INFO:     127.0.0.1:19893 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:31,530 | INFO | app | Loaded 5 role profiles.
+2026-05-18 21:49:31,541 | INFO | app | Milvus(remote) collection_dropped name=role_knowledge
+2026-05-18 21:49:33,907 | INFO | app | Milvus(remote) collection_created name=role_knowledge dim=768
+2026-05-18 21:49:33,907 | INFO | app | Knowledge collection reset before reload. collection=role_knowledge
+2026-05-18 21:49:33,908 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:34,211 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:34,477 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:34,734 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:34,992 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:35,255 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:35,502 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:35,747 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:36,001 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:36,193 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:36,383 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:36,571 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:39,398 | INFO | app | Milvus(remote) documents_upserted collection=role_knowledge count=12
+2026-05-18 21:49:39,398 | INFO | app | Knowledge chunks stored collection=role_knowledge count=12
+INFO:     127.0.0.1:58416 - "POST /knowledge/reload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58416 - "POST /users HTTP/1.1" 200 OK
+2026-05-18 21:49:39,439 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=4
+2026-05-18 21:49:39,440 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:39,441 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:39,575 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我最近总是很焦虑，晚上睡不着。
+2026-05-18 21:49:39,579 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'psychologist'} hits=3 query=我最近总是很焦虑，晚上睡不着
+2026-05-18 21:49:39,580 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:49:42,258 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=5
+2026-05-18 21:49:42,261 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=6
+2026-05-18 21:49:42,263 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=6
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:42,291 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=6
+2026-05-18 21:49:42,292 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:42,293 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:42,512 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'psychologist'} hits=3 query=我最近总是很焦虑，晚上睡不着
+2026-05-18 21:49:42,531 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我最近总是很焦虑，晚上睡不着。
+2026-05-18 21:49:42,531 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:49:44,842 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=7
+2026-05-18 21:49:44,844 | INFO | app | Redis(remote) message_saved session_id=eval-session-1 total=8
+2026-05-18 21:49:44,844 | INFO | app | Redis(remote) history_loaded session_id=eval-session-1 total=8
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:44,853 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=4
+2026-05-18 21:49:44,853 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:44,853 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:45,016 | INFO | app | Long-memory search user_id=eval-user hits=0 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料？
+2026-05-18 21:49:45,020 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'legal_consultant'} hits=3 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料
+2026-05-18 21:49:45,021 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:49:53,151 | WARNING | app | Detected corrupted or low-quality LLM output for role=legal_consultant; falling back to local mock answer.
+2026-05-18 21:49:53,159 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=5
+2026-05-18 21:49:53,160 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=6
+2026-05-18 21:49:53,161 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=6
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:53,166 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=6
+2026-05-18 21:49:53,167 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:53,167 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:53,312 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'legal_consultant'} hits=3 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料
+2026-05-18 21:49:53,339 | INFO | app | Long-memory search user_id=eval-user hits=0 query=公司没签劳动合同，现在突然辞退我，我该准备什么材料？
+2026-05-18 21:49:53,339 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:49:56,069 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=7
+2026-05-18 21:49:56,071 | INFO | app | Redis(remote) message_saved session_id=eval-session-2 total=8
+2026-05-18 21:49:56,072 | INFO | app | Redis(remote) history_loaded session_id=eval-session-2 total=8
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:56,082 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=4
+2026-05-18 21:49:56,083 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:56,084 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:56,247 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'wealth_advisor'} hits=3 query=我有十万块，两年后要用，能不能都买股票
+2026-05-18 21:49:56,249 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我有十万块，两年后要用，能不能都买股票？
+2026-05-18 21:49:56,250 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:49:59,060 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=5
+2026-05-18 21:49:59,061 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=6
+2026-05-18 21:49:59,062 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=6
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK
+2026-05-18 21:49:59,071 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=6
+2026-05-18 21:49:59,071 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:59,073 | INFO | app | Calling embedding service model=moka-ai/m3e-base endpoint=http://127.0.0.1:8002/embeddings batch=1
+2026-05-18 21:49:59,220 | INFO | app | Long-memory search user_id=eval-user hits=0 query=我有十万块，两年后要用，能不能都买股票？
+2026-05-18 21:49:59,222 | INFO | app | Milvus(remote) hybrid_search collection=role_knowledge top_k=6 filters={'role_id': 'wealth_advisor'} hits=3 query=我有十万块，两年后要用，能不能都买股票
+2026-05-18 21:49:59,223 | INFO | app | Calling LLM provider=siliconflow model=Qwen/Qwen2.5-7B-Instruct endpoint=https://api.siliconflow.cn/v1/chat/completions
+2026-05-18 21:50:00,676 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=7
+2026-05-18 21:50:00,677 | INFO | app | Redis(remote) message_saved session_id=eval-session-3 total=8
+2026-05-18 21:50:00,677 | INFO | app | Redis(remote) history_loaded session_id=eval-session-3 total=8
+INFO:     127.0.0.1:58416 - "POST /chat HTTP/1.1" 200 OK

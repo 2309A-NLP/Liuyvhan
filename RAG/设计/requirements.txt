@@ -1,0 +1,19 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pydantic==2.9.2
+numpy==1.26.4
+scikit-learn==1.5.2
+requests==2.32.3
+httpx==0.27.2
+pytest==8.3.3
+pymilvus==2.5.16
+redis==5.0.8
+pymysql==1.1.1
+sentence-transformers==3.1.1
+PyMuPDF==1.24.13
+pytesseract==0.3.13
+Pillow==12.2.0
+
+# Optional integrations for later extension:
+# sentence-transformers==3.1.1
+# FlagEmbedding==1.3.3
