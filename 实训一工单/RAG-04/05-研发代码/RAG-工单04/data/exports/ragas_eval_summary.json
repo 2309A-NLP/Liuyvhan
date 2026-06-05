@@ -1,0 +1,131 @@
+{
+  "总题数": 10,
+  "RAGAS指标": {},
+  "RAGAS错误": {
+    "??": "????",
+    "????": "????????",
+    "RAG??": "?????????",
+    "?LLM??": "????????????",
+    "RAG??(?)": "RAG??????",
+    "?LLM??(?)": "?LLM??????",
+    "?????": "RAGAS answer_relevancy",
+    "??????": "RAGAS context_recall",
+    "???": "RAGAS faithfulness"
+  },
+  "字段说明": {
+    "题号": "问题编号",
+    "问题": "用户提问",
+    "标准答案": "人工标注参考答案",
+    "RAG答案": "检索增强问答结果",
+    "纯LLM答案": "不检索文档时的大模型回答",
+    "RAG来源": "检索到的上下文片段",
+    "RAG耗时(秒)": "RAG链路单题耗时",
+    "纯LLM耗时(秒)": "纯LLM链路单题耗时",
+    "答案相关性": "RAGAS answer_relevancy",
+    "上下文精确率": "RAGAS context_precision",
+    "上下文召回率": "RAGAS context_recall",
+    "忠实度": "RAGAS faithfulness"
+  },
+  "记录": [
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    },
+    {
+      "题号": null,
+      "问题": null,
+      "标准答案": null,
+      "RAG答案": null,
+      "纯LLM答案": null,
+      "RAG来源": null,
+      "RAG耗时(秒)": null,
+      "纯LLM耗时(秒)": null
+    }
+  ]
+}

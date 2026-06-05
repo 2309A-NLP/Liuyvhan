@@ -1,0 +1,112 @@
+from pathlib import Path
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+
+    app_name: str = Field(default="RAG Prospectus QA API", alias="APP_NAME")
+    app_host: str = Field(default="0.0.0.0", alias="APP_HOST")
+    app_port: int = Field(default=8000, alias="APP_PORT")
+    log_level: str = Field(default="INFO", alias="LOG_LEVEL")
+
+    data_root: str = Field(default="./data", alias="DATA_ROOT")
+    raw_data_dir: str = Field(default="./data/raw", alias="RAW_DATA_DIR")
+    processed_data_dir: str = Field(default="./data/processed", alias="PROCESSED_DATA_DIR")
+    export_dir: str = Field(default="./data/exports", alias="EXPORT_DIR")
+    image_data_dir: str = Field(default="./data/processed/images", alias="IMAGE_DATA_DIR")
+    default_file_name: str = Field(default="招股说明书1.pdf", alias="DEFAULT_FILE_NAME")
+
+    embedding_model: str = Field(
+        default="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        alias="EMBEDDING_MODEL",
+    )
+    embedding_model_path: str = Field(default="", alias="EMBEDDING_MODEL_PATH")
+    embedding_batch_size: int = Field(default=16, alias="EMBEDDING_BATCH_SIZE")
+    chunk_size: int = Field(default=700, alias="CHUNK_SIZE")
+    chunk_overlap: int = Field(default=120, alias="CHUNK_OVERLAP")
+    top_k: int = Field(default=5, alias="TOP_K")
+    vector_top_k: int = Field(default=8, alias="VECTOR_TOP_K")
+    bm25_top_k: int = Field(default=8, alias="BM25_TOP_K")
+    hybrid_top_k: int = Field(default=5, alias="HYBRID_TOP_K")
+    hybrid_candidate_pool: int = Field(default=16, alias="HYBRID_CANDIDATE_POOL")
+    context_neighbor_window: int = Field(default=1, alias="CONTEXT_NEIGHBOR_WINDOW")
+    bm25_weight: float = Field(default=0.4, alias="BM25_WEIGHT")
+    vector_weight: float = Field(default=0.6, alias="VECTOR_WEIGHT")
+    enable_reranker: bool = Field(default=True, alias="ENABLE_RERANKER")
+    reranker_model: str = Field(default="BAAI/bge-reranker-v2-m3", alias="RERANKER_MODEL")
+    reranker_top_k: int = Field(default=5, alias="RERANKER_TOP_K")
+
+    milvus_uri: str = Field(default="http://127.0.0.1:19530", alias="MILVUS_URI")
+    milvus_token: str = Field(default="", alias="MILVUS_TOKEN")
+    milvus_collection: str = Field(default="prospectus_chunks", alias="MILVUS_COLLECTION")
+    milvus_consistency: str = Field(default="Strong", alias="MILVUS_CONSISTENCY")
+
+    redis_url: str = Field(default="redis://127.0.0.1:6379/0", alias="REDIS_URL")
+    redis_cache_ttl: int = Field(default=3600, alias="REDIS_CACHE_TTL")
+
+    llm_base_url: str = Field(default="https://api.openai.com/v1", alias="LLM_BASE_URL")
+    llm_api_key: str = Field(default="", alias="LLM_API_KEY")
+    llm_model: str = Field(default="gpt-4o-mini", alias="LLM_MODEL")
+    llm_temperature: float = Field(default=0.0, alias="LLM_TEMPERATURE")
+    enable_multimodal_image_parsing: bool = Field(default=True, alias="ENABLE_MULTIMODAL_IMAGE_PARSING")
+    enable_clip_image_semantics: bool = Field(default=True, alias="ENABLE_CLIP_IMAGE_SEMANTICS")
+    enable_vlm_image_semantics: bool = Field(default=False, alias="ENABLE_VLM_IMAGE_SEMANTICS")
+    multimodal_model: str = Field(default="", alias="MULTIMODAL_MODEL")
+    clip_model_name: str = Field(default="openai/clip-vit-base-patch32", alias="CLIP_MODEL_NAME")
+    clip_model_path: str = Field(default="", alias="CLIP_MODEL_PATH")
+    max_images_per_page: int = Field(default=8, alias="MAX_IMAGES_PER_PAGE")
+    min_image_width: int = Field(default=180, alias="MIN_IMAGE_WIDTH")
+    min_image_height: int = Field(default=170, alias="MIN_IMAGE_HEIGHT")
+    # 水印过滤：跳过 SMask（软遮罩/透明背景）图片，这类图片通常是重复的水印装饰图案
+    # 招股说明书 PDF 中常见：每页 15 张 143x127pt SMask 图片排列成 3×5 网格
+    enable_watermark_filter: bool = Field(default=True, alias="ENABLE_WATERMARK_FILTER")
+    # 文字水印过滤：提取文本后移除已知水印关键词（逗号分隔，支持正则）
+    watermark_text_patterns: str = Field(
+        default="招股意向书（申报稿）,招股说明书（申报稿）",
+        alias="WATERMARK_TEXT_PATTERNS",
+    )
+    # 页眉页脚过滤：跳过页面顶部/底部 N% 的重复内容（水印、页眉、页脚等）
+    header_margin_ratio: float = Field(default=0.06, alias="HEADER_MARGIN_RATIO")
+    footer_margin_ratio: float = Field(default=0.06, alias="FOOTER_MARGIN_RATIO")
+
+    mysql_enabled: bool = Field(default=False, alias="MYSQL_ENABLED")
+    mysql_host: str = Field(default="127.0.0.1", alias="MYSQL_HOST")
+    mysql_port: int = Field(default=3306, alias="MYSQL_PORT")
+    mysql_user: str = Field(default="root", alias="MYSQL_USER")
+    mysql_password: str = Field(default="", alias="MYSQL_PASSWORD")
+    mysql_database: str = Field(default="rag_ticket01", alias="MYSQL_DATABASE")
+
+    eval_output_csv: str = Field(default="./data/exports/ragas_eval_results.csv", alias="EVAL_OUTPUT_CSV")
+    eval_output_json: str = Field(default="./data/exports/ragas_eval_summary.json", alias="EVAL_OUTPUT_JSON")
+
+    @property
+    def raw_dir(self) -> Path:
+        return Path(self.raw_data_dir).resolve()
+
+    @property
+    def processed_dir(self) -> Path:
+        return Path(self.processed_data_dir).resolve()
+
+    @property
+    def exports_dir(self) -> Path:
+        return Path(self.export_dir).resolve()
+
+    @property
+    def image_dir(self) -> Path:
+        return Path(self.image_data_dir).resolve()
+
+    @property
+    def mysql_dsn(self) -> str:
+        return (
+            f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}"
+            f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_database}?charset=utf8mb4"
+        )
+
+
+settings = Settings()
+
+for directory in [settings.raw_dir, settings.processed_dir, settings.exports_dir, settings.image_dir]:
+    directory.mkdir(parents=True, exist_ok=True)
