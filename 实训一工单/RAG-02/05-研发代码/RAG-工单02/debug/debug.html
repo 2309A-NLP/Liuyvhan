@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Pipeline Visual Debugger</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #121828;
+    --card: #1a2140;
+    --border: #2a3560;
+    --text: #d0d8f0;
+    --text-dim: #6a7a9a;
+    --accent: #6c8cff;
+    --accent2: #4aecb0;
+    --accent3: #ff6b8a;
+    --warn: #ffb347;
+    --node-w: 140px;
+    --node-h: 90px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Layout */
+  #app { display: grid; grid-template-columns: 280px 1fr 380px; grid-template-rows: 1fr; height: 100vh; gap: 0; }
+
+  /* Left Panel */
+  #params { background: var(--surface); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+  #params h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
+  .param-group { margin-bottom: 16px; }
+  .param-group label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+  .param-group label span { color: var(--accent2); font-weight: bold; }
+  .param-group input[type="range"] { width: 100%; height: 4px; -webkit-appearance: none; background: var(--border); border-radius: 2px; outline: none; }
+  .param-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: 0.2s; }
+  .param-group input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 12px var(--accent); }
+
+  #question-area { margin: 20px 0; }
+  #question-area textarea { width: 100%; height: 80px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px; font-size: 13px; resize: vertical; outline: none; }
+  #question-area textarea:focus { border-color: var(--accent); }
+
+  #file-name-input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 10px; font-size: 13px; outline: none; margin-bottom: 16px; }
+  #file-name-input:focus { border-color: var(--accent); }
+
+  .btn-run { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent), #4a5cd0); border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; letter-spacing: 1px; }
+  .btn-run:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(108,140,255,0.3); }
+  .btn-run:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* Center Panel */
+  #main { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+  #header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  #header h1 { font-size: 18px; font-weight: 300; color: var(--text); }
+  #header h1 span { color: var(--accent); font-weight: 600; }
+  #header .status { font-size: 12px; color: var(--text-dim); }
+  #header .status .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+  .dot.idle { background: var(--text-dim); }
+  .dot.running { background: var(--warn); animation: pulse 0.8s infinite; }
+  .dot.done { background: var(--accent2); }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* Pipeline Flow */
+  #pipeline { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow-y: auto; }
+
+  #flow-row { display: flex; align-items: center; gap: 0; padding: 16px 0; overflow-x: auto; justify-content: center; flex-wrap: wrap; }
+
+  .pipeline-node { flex-shrink: 0; width: var(--node-w); min-height: var(--node-h); background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .pipeline-node:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(108,140,255,0.15); }
+  .pipeline-node.active { border-color: var(--accent); box-shadow: 0 0 20px rgba(108,140,255,0.2); }
+  .pipeline-node.done { border-color: var(--accent2); }
+  .pipeline-node.error { border-color: var(--accent3); }
+  .pipeline-node .step-icon { font-size: 22px; margin-bottom: 4px; }
+  .pipeline-node .step-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); }
+  .pipeline-node .step-status { font-size: 10px; margin-top: 4px; color: var(--text-dim); }
+  .pipeline-node.done .step-status { color: var(--accent2); }
+  .pipeline-node .step-time { font-size: 9px; color: var(--text-dim); margin-top: 2px; }
+
+  .flow-arrow { flex-shrink: 0; width: 30px; color: var(--border); font-size: 18px; text-align: center; }
+
+  /* Detail Panel */
+  #detail-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-top: 16px; display: none; }
+  #detail-panel.show { display: block; }
+  #detail-panel .detail-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  #detail-panel .detail-header h3 { font-size: 13px; color: var(--accent); }
+  #detail-panel .detail-header .close-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 16px; }
+  #detail-panel .detail-body { padding: 12px 16px; max-height: 300px; overflow-y: auto; }
+  #detail-panel .detail-body table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  #detail-panel .detail-body th { text-align: left; color: var(--text-dim); padding: 4px 8px; border-bottom: 1px solid var(--border); }
+  #detail-panel .detail-body td { padding: 4px 8px; border-bottom: 1px solid rgba(42,53,96,0.4); color: var(--text); }
+  #detail-panel .detail-body .highlight { color: var(--accent2); font-weight: bold; }
+  .content-cell { max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Timer/Summary bar */
+  #summary-bar { padding: 8px 24px; background: var(--surface); border-top: 1px solid var(--border); display: flex; gap: 24px; font-size: 12px; color: var(--text-dim); }
+  #summary-bar .stat { display: flex; align-items: center; gap: 6px; }
+  #summary-bar .stat strong { color: var(--accent2); }
+
+  /* Right Panel - 3D Viz */
+  #viz-panel { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+  #viz-panel h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  #p5-container { flex: 1; min-height: 0; }
+
+  /* Raw JSON */
+  #raw-json { background: var(--surface); border-top: 1px solid var(--border); max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+  #raw-json.open { max-height: 300px; }
+  #raw-json pre { padding: 12px 16px; font-size: 11px; line-height: 1.5; color: var(--text-dim); overflow: auto; max-height: 260px; white-space: pre-wrap; word-break: break-all; }
+  #raw-toggle { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); color: var(--text-dim); padding: 4px 12px; border-radius: 12px; font-size: 10px; cursor: pointer; z-index: 10; }
+  #main { position: relative; }
+
+  .dimension-bar { display: inline-block; height: 8px; min-width: 2px; background: var(--accent); border-radius: 2px; margin-right: 1px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Left: Parameters -->
+  <div id="params">
+    <h2>Parameters</h2>
+    <div class="param-group">
+      <label>Question <span id="question-chars">0</span></label>
+      <textarea id="question" placeholder="输入问题，例如：公司的主要业务是什么？">报告期内，公司来自军用领域的收入分别为多少？</textarea>
+    </div>
+    <div class="param-group">
+      <label>PDF 文件名</label>
+      <input id="file-name" type="text" value="招股说明书1.pdf" placeholder="招股说明书1.pdf">
+    </div>
+    <hr style="border-color: var(--border); margin: 16px 0;">
+    <div class="param-group">
+      <label>Chunk Size <span id="v-chunk-size">700</span></label>
+      <input type="range" id="chunk-size" min="200" max="1200" value="700" step="50">
+    </div>
+    <div class="param-group">
+      <label>Chunk Overlap <span id="v-chunk-overlap">120</span></label>
+      <input type="range" id="chunk-overlap" min="0" max="300" value="120" step="10">
+    </div>
+    <div class="param-group">
+      <label>Top-K <span id="v-top-k">5</span></label>
+      <input type="range" id="top-k" min="1" max="20" value="5" step="1">
+    </div>
+    <div class="param-group">
+      <label>Temperature <span id="v-temperature">0.7</span></label>
+      <input type="range" id="temperature" min="0" max="1" value="0.7" step="0.05">
+    </div>
+    <div class="param-group">
+      <label>Vector Weight <span id="v-vector-weight">0.6</span></label>
+      <input type="range" id="vector-weight" min="0" max="1" value="0.6" step="0.05">
+    </div>
+    <div class="param-group">
+      <label>BM25 Weight <span id="v-bm25-weight">0.4</span></label>
+      <input type="range" id="bm25-weight" min="0" max="1" value="0.4" step="0.05">
+    </div>
+    <button class="btn-run" id="btn-run" onclick="runPipeline()">RUN PIPELINE</button>
+    <p style="font-size:10px; color:var(--text-dim); margin-top:12px; text-align:center;">点击 Pipeline 节点查看详情</p>
+  </div>
+
+  <!-- Center: Main -->
+  <div id="main">
+    <div id="header">
+      <div>
+        <h1>RAG <span>Pipeline</span> Debugger</h1>
+      </div>
+      <div class="status"><span class="dot idle" id="status-dot"></span><span id="status-text">Ready</span></div>
+    </div>
+
+    <div id="pipeline">
+      <div id="flow-row">
+        <div class="pipeline-node" data-step="chunking" onclick="showDetail('chunking')">
+          <div class="step-icon">📄</div>
+          <div class="step-label">Chunk</div>
+          <div class="step-status" id="s-chunking-status">awaiting</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="pipeline-node" data-step="embedding" onclick="showDetail('embedding')">
+          <div class="step-icon">🌐</div>
+          <div class="step-label">Embed</div>
+          <div class="step-status" id="s-embedding-status">awaiting</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="pipeline-node" data-step="vector_search" onclick="showDetail('vector_search')">
+          <div class="step-icon">🔍</div>
+          <div class="step-label">Vector Search</div>
+          <div class="step-status" id="s-vector_search-status">awaiting</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="pipeline-node" data-step="bm25_search" onclick="showDetail('bm25_search')">
+          <div class="step-icon">📑</div>
+          <div class="step-label">BM25</div>
+          <div class="step-status" id="s-bm25_search-status">awaiting</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="pipeline-node" data-step="reranking" onclick="showDetail('reranking')">
+          <div class="step-icon">⚖️</div>
+          <div class="step-label">Rerank</div>
+          <div class="step-status" id="s-reranking-status">awaiting</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="pipeline-node" data-step="generation" onclick="showDetail('generation')">
+          <div class="step-icon">🤖</div>
+          <div class="step-label">Generate</div>
+          <div class="step-status" id="s-generation-status">awaiting</div>
+        </div>
+      </div>
+
+      <!-- Detail Panel -->
+      <div id="detail-panel">
+        <div class="detail-header">
+          <h3 id="detail-title">Step Details</h3>
+          <button class="close-btn" onclick="closeDetail()">✕</button>
+        </div>
+        <div class="detail-body" id="detail-body"></div>
+      </div>
+    </div>
+
+    <div id="summary-bar">
+      <div class="stat">⏱ Total: <strong id="stat-total">—</strong></div>
+      <div class="stat">📦 Chunks: <strong id="stat-chunks">—</strong></div>
+      <div class="stat">🎯 Recalled: <strong id="stat-recalled">—</strong></div>
+      <div class="stat">📝 Tokens: <strong id="stat-tokens">—</strong></div>
+    </div>
+
+    <div id="raw-json">
+      <pre id="raw-content"></pre>
+    </div>
+    <button id="raw-toggle" onclick="toggleRaw()">Show Raw JSON ▾</button>
+  </div>
+
+  <!-- Right: 3D Viz -->
+  <div id="viz-panel">
+    <h3>Vector Space 3D</h3>
+    <div id="p5-container"></div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+let pipelineData = null;
+let currentDetailStep = null;
+let rawOpen = false;
+let p5Instance = null;
+let vectorPoints = [];
+let highlightedIndices = [];
+
+// ── Parameter bindings ────────────────────────────────────────────
+function bindSlider(id, displayId) {
+  const slider = document.getElementById(id);
+  const display = document.getElementById(displayId);
+  slider.addEventListener('input', () => { display.textContent = slider.value; });
+}
+bindSlider('chunk-size', 'v-chunk-size');
+bindSlider('chunk-overlap', 'v-chunk-overlap');
+bindSlider('top-k', 'v-top-k');
+bindSlider('temperature', 'v-temperature');
+bindSlider('vector-weight', 'v-vector-weight');
+bindSlider('bm25-weight', 'v-bm25-weight');
+
+document.getElementById('question').addEventListener('input', function() {
+  document.getElementById('question-chars').textContent = this.value.length;
+});
+
+function getParams() {
+  return {
+    chunk_size: parseInt(document.getElementById('chunk-size').value),
+    chunk_overlap: parseInt(document.getElementById('chunk-overlap').value),
+    top_k: parseInt(document.getElementById('top-k').value),
+    temperature: parseFloat(document.getElementById('temperature').value),
+    vector_weight: parseFloat(document.getElementById('vector-weight').value),
+    bm25_weight: parseFloat(document.getElementById('bm25-weight').value),
+  };
+}
+
+// ── API call ───────────────────────────────────────────────────────
+async function runPipeline() {
+  const btn = document.getElementById('btn-run');
+  btn.disabled = true;
+  btn.textContent = 'RUNNING...';
+  setStatus('running', 'Running Pipeline...');
+  resetNodes();
+
+  const question = document.getElementById('question').value.trim();
+  if (!question) { alert('Please enter a question.'); btn.disabled = false; btn.textContent = 'RUN PIPELINE'; return; }
+
+  const body = {
+    question: question,
+    file_name: document.getElementById('file-name').value.trim() || null,
+    parameters: getParams(),
+  };
+
+  try {
+    const resp = await fetch('/api/v1/debug/pipeline', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(err);
+    }
+    pipelineData = await resp.json();
+    onPipelineDone(pipelineData);
+  } catch (err) {
+    setStatus('idle', 'Error: ' + err.message);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'RUN PIPELINE';
+  }
+}
+
+function setStatus(type, text) {
+  const dot = document.getElementById('status-dot');
+  dot.className = 'dot ' + type;
+  document.getElementById('status-text').textContent = text;
+}
+
+function resetNodes() {
+  document.querySelectorAll('.pipeline-node').forEach(n => {
+    n.classList.remove('active', 'done', 'error');
+    const step = n.dataset.step;
+    const st = document.getElementById('s-' + step + '-status');
+    if (st) st.textContent = '...';
+  });
+  document.getElementById('detail-panel').classList.remove('show');
+  document.getElementById('stat-total').textContent = '—';
+  document.getElementById('stat-chunks').textContent = '—';
+  document.getElementById('stat-recalled').textContent = '—';
+  document.getElementById('stat-tokens').textContent = '—';
+  vectorPoints = [];
+  highlightedIndices = [];
+}
+
+function onPipelineDone(data) {
+  setStatus('done', `Completed in ${data.total_duration_seconds}s`);
+
+  // Update summary
+  document.getElementById('stat-total').textContent = data.total_duration_seconds + 's';
+  const chunks = data.steps.chunking?.chunks?.length || 0;
+  document.getElementById('stat-chunks').textContent = chunks;
+  const recalled = data.steps.reranking?.hits?.length || 0;
+  document.getElementById('stat-recalled').textContent = recalled;
+
+  // Mark nodes done
+  const steps = ['chunking', 'embedding', 'vector_search', 'bm25_search', 'reranking', 'generation'];
+  steps.forEach(s => {
+    const node = document.querySelector(`[data-step="${s}"]`);
+    if (node && data.steps[s]) {
+      node.classList.add('done');
+      const st = document.getElementById('s-' + s + '-status');
+      if (st) {
+        const dur = data.steps[s].duration_seconds;
+        st.textContent = (dur ? dur.toFixed(3) + 's' : 'done');
+      }
+    }
+  });
+
+  // Build 3D points
+  buildVectorPoints(data);
+
+  // Show raw JSON
+  showRaw(data);
+
+  // Auto-open first step detail
+  showDetail('chunking');
+}
+
+// ── Detail Panel ───────────────────────────────────────────────────
+function showDetail(stepName) {
+  if (!pipelineData || !pipelineData.steps[stepName]) return;
+  currentDetailStep = stepName;
+  const step = pipelineData.steps[stepName];
+  const panel = document.getElementById('detail-panel');
+  const title = document.getElementById('detail-title');
+  const body = document.getElementById('detail-body');
+
+  // Highlight node
+  document.querySelectorAll('.pipeline-node').forEach(n => n.classList.remove('active'));
+  const node = document.querySelector(`[data-step="${stepName}"]`);
+  if (node) node.classList.add('active');
+
+  const labels = {
+    chunking: 'Chunking — 文档分块',
+    embedding: 'Embedding — 文本向量化',
+    vector_search: 'Vector Search — 向量检索',
+    bm25_search: 'BM25 — 关键词检索',
+    hybrid_merge: 'Hybrid Merge — 混合融合',
+    reranking: 'Reranking — 重排序',
+    generation: 'Generation — LLM 生成',
+  };
+  title.textContent = labels[stepName] || stepName;
+
+  let html = '';
+  if (step.chunks) {
+    // Chunk list
+    html += `<p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">共 ${step.total_chunks} 个分块 | 参数: chunk_size=${step.params.chunk_size}, overlap=${step.params.chunk_overlap}</p>`;
+    html += `<table><tr><th>#</th><th>Page</th><th>Length</th><th>Preview</th></tr>`;
+    step.chunks.forEach((c, i) => {
+      html += `<tr><td>${c.chunk_index}</td><td>${c.page}</td><td>${c.content_length}</td><td class="content-cell">${escHtml(c.content_preview)}</td></tr>`;
+    });
+    html += `</table>`;
+  } else if (step.vector_previews) {
+    html += `<p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">维度: ${step.dimension} | 共 ${step.total_vectors} 个向量</p>`;
+    html += `<table style="font-size:10px;"><tr><th>#</th><th>Norm</th><th>First 5 Dims</th></tr>`;
+    step.vector_previews.forEach((v, i) => {
+      html += `<tr><td>${i}</td><td class="highlight">${v.norm}</td><td style="font-family:monospace;font-size:10px;">[${v.first_5_dims.map(d => d.toFixed(3)).join(', ')}]</td></tr>`;
+    });
+    html += `</table>`;
+  } else if (step.hits) {
+    html += `<p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">共 ${step.total_hits} 条命中</p>`;
+    html += `<table><tr><th>Chunk</th><th>Score</th><th>Type</th><th>Preview</th></tr>`;
+    step.hits.forEach(h => {
+      const scoreKey = h.rerank_score !== undefined ? 'rerank_score' :
+                        h.hybrid_score !== undefined ? 'hybrid_score' :
+                        h.vector_score !== undefined ? 'vector_score' : 'score';
+      html += `<tr><td style="font-size:10px;">${h.chunk_id?.slice(-8) || ''}</td>
+               <td class="highlight">${(h[scoreKey] || h.score || 0).toFixed(4)}</td>
+               <td>${h.retrieval_type || ''}</td>
+               <td class="content-cell">${escHtml(h.content_preview || h.content?.slice(0,200) || '')}</td></tr>`;
+    });
+    html += `</table>`;
+  } else if (step.answer !== undefined) {
+    html += `<p style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">用时: ${step.duration_seconds}s | 引用 ${step.source_count} 个来源</p>`;
+    html += `<div style="background:var(--card);border-radius:8px;padding:12px;font-size:13px;line-height:1.6;color:var(--accent2);">${escHtml(step.answer)}</div>`;
+  } else {
+    html = `<p style="color:var(--text-dim)">No detail data available.</p>`;
+  }
+
+  body.innerHTML = html;
+  panel.classList.add('show');
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('show');
+  document.querySelectorAll('.pipeline-node').forEach(n => n.classList.remove('active'));
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Raw JSON ───────────────────────────────────────────────────────
+function showRaw(data) {
+  document.getElementById('raw-content').textContent = JSON.stringify(data, null, 2);
+}
+function toggleRaw() {
+  const el = document.getElementById('raw-json');
+  const btn = document.getElementById('raw-toggle');
+  rawOpen = !rawOpen;
+  el.classList.toggle('open', rawOpen);
+  btn.textContent = rawOpen ? 'Hide Raw JSON ▴' : 'Show Raw JSON ▾';
+}
+
+// ── 3D Vector Space (p5.js) ───────────────────────────────────────
+function buildVectorPoints(data) {
+  const vectors = data.steps.embedding?.all_vectors;
+  const recalledChunkIds = new Set();
+  (data.steps.reranking?.hits || []).forEach(h => recalledChunkIds.add(h.chunk_id));
+
+  if (!vectors || vectors.length === 0) {
+    vectorPoints = [];
+    highlightedIndices = [];
+    return;
+  }
+
+  // Use first 3 dims as XYZ for visualization
+  vectorPoints = vectors.map((v, i) => ({
+    x: v[0] || 0,
+    y: v[1] || 0,
+    z: v[2] || 0,
+    highlighted: false,
+  }));
+
+  // Mark recalled chunks (we know chunk_ids but aligning to vector indices is approximate)
+  // Since vectors align 1:1 with chunks, and chunks have same ordering as vector_previews
+  const previews = data.steps.embedding?.vector_previews || [];
+  highlightedIndices = [];
+  previews.forEach((p, i) => {
+    const cid = p.chunk_id;
+    if (recalledChunkIds.has(cid)) {
+      highlightedIndices.push(i);
+      if (vectorPoints[i]) vectorPoints[i].highlighted = true;
+    }
+  });
+}
+
+// p5.js sketch
+function sketch(p) {
+  let camTheta = 0;
+  let camPhi = 0.5;
+
+  p.setup = function() {
+    const container = document.getElementById('p5-container');
+    const w = container.clientWidth;
+    const h = container.clientHeight || 300;
+    const canvas = p.createCanvas(w, h, p.WEBGL);
+    canvas.parent('p5-container');
+    p.pixelDensity(1);
+    p.colorMode(p.RGB, 1);
+  };
+
+  p.draw = function() {
+    p.background(0.04, 0.05, 0.1);
+
+    // Auto-rotate
+    camTheta += 0.005;
+    p.orbitControl();
+
+    // Lights
+    p.ambientLight(0.1, 0.1, 0.2);
+    p.directionalLight(0.3, 0.4, 0.6, 0, 1, -1);
+    p.directionalLight(0.1, 0.2, 0.4, -1, 0, 1);
+
+    // Draw grid
+    p.push();
+    p.rotateX(p.HALF_PI);
+    p.stroke(0.15, 0.18, 0.3);
+    p.strokeWeight(0.5);
+    for (let i = -3; i <= 3; i++) {
+      p.line(i, -3, i, 3);
+      p.line(-3, i, 3, i);
+    }
+    p.pop();
+
+    // Draw axes
+    p.push();
+    p.strokeWeight(1.5);
+    p.stroke(1, 0.3, 0.3); p.line(0,0,0, 1.2,0,0);
+    p.stroke(0.3, 1, 0.3); p.line(0,0,0, 0,1.2,0);
+    p.stroke(0.3, 0.3, 1); p.line(0,0,0, 0,0,1.2);
+    p.pop();
+
+    // Draw vectors
+    if (vectorPoints.length === 0) {
+      p.push();
+      p.fill(0.4, 0.4, 0.6, 0.5);
+      p.noStroke();
+      p.textAlign(p.CENTER, p.CENTER);
+      p.textSize(14);
+      p.text('Run pipeline to see vectors', 0, 0);
+      p.pop();
+      return;
+    }
+
+    const scale = 2.0;
+    p.strokeWeight(1);
+    vectorPoints.forEach((pt, i) => {
+      const sx = pt.x * scale;
+      const sy = pt.y * scale;
+      const sz = pt.z * scale;
+
+      if (pt.highlighted) {
+        // Recalled: glow
+        p.push();
+        p.translate(sx, sy, sz);
+        p.fill(0.29, 0.93, 0.69, 0.9);
+        p.noStroke();
+        p.sphere(0.08);
+        p.pop();
+        // Glow ring
+        p.push();
+        p.translate(sx, sy, sz);
+        p.noFill();
+        p.stroke(0.29, 0.93, 0.69, 0.3 + 0.2 * p.sin(p.frameCount * 0.05 + i));
+        p.sphere(0.14);
+        p.pop();
+      } else {
+        p.push();
+        p.translate(sx, sy, sz);
+        p.fill(0.42, 0.55, 1.0, 0.5);
+        p.noStroke();
+        p.sphere(0.04);
+        p.pop();
+      }
+    });
+
+    // Legend
+    p.push();
+    p.resetMatrix();
+    p.textAlign(p.LEFT, p.TOP);
+    p.textSize(10);
+    p.fill(0.42, 0.55, 1.0, 0.6);
+    p.text('Chunks', 10, 10);
+    p.fill(0.29, 0.93, 0.69, 0.9);
+    p.text('Recalled', 10, 24);
+    p.pop();
+  };
+
+  p.windowResized = function() {
+    const container = document.getElementById('p5-container');
+    p.resizeCanvas(container.clientWidth, container.clientHeight || 300);
+  };
+}
+
+// Init p5
+setTimeout(() => { p5Instance = new p5(sketch); }, 100);
+</script>
+</body>
+</html>
