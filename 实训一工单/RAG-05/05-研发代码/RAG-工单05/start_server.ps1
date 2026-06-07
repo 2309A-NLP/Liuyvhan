@@ -1,0 +1,2 @@
+Start-Process -FilePath "D:\Anaconda\envs\RAG\python.exe" -ArgumentList "-m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info" -WorkingDirectory "C:\Users\刘禹含\Desktop\RAG-工单04" -WindowStyle Hidden -RedirectStandardOutput "C:\Users\刘禹含\Desktop\RAG-工单04\server_uvicorn.log" -RedirectStandardError "C:\Users\刘禹含\Desktop\RAG-工单04\server_uvicorn.err"
+Write-Output "Started uvicorn in background"

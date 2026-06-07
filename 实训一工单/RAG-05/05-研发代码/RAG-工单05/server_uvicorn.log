@@ -1,0 +1,588 @@
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+INFO:     Started server process [27720]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8000): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+C:\Users\刘禹含\Desktop\RAG-工单05\app\services\embedding_service.py:26: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.embedding_dimension = self.model.get_sentence_embedding_dimension()
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\刘禹含\AppData\Local\Temp\jieba.cache
+Loading model cost 1.189 seconds.
+Prefix dict has been built successfully.
+  [BM25] 已恢复: 招股说明书2.pdf (1110 chunks)
+  [BM25] 已恢复: 招股说明书1.pdf (1682 chunks)
+  [INDEX-BG] 后台索索引线程启动...
+  [INDEX-BG] Milvus 已就绪 (attempt 1)
+INFO:     Started server process [31592]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+  [MILVUS] 缺失, 重新索索引: 招股说明书1.pdf
+  [INGEST] 开始解析PDF: 招股说明书1.pdf
+  [PDF] 第1页, 发现18张图片, 过滤后15张真实图片
+  [PDF] 第2页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第3页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第4页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第5页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第6页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第7页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第8页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第9页, 发现15张图片, 过滤后12张真实图片
+INFO:     127.0.0.1:59088 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59089 - "GET /health HTTP/1.1" 404 Not Found
+  [PDF] 第10页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第11页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第12页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第13页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第14页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第15页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第16页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第17页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第18页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第19页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第20页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第21页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第22页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第23页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第24页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第25页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第26页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第27页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第28页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第29页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第30页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第31页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第32页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第33页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第34页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第35页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第36页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第37页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第38页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第39页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第40页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第41页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第42页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第43页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第44页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第45页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第46页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第47页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第48页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第49页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第50页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第51页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第52页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第53页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第54页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第55页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第56页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第57页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第58页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第59页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第60页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第61页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第62页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第63页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第64页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第65页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第66页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第67页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第68页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第69页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第70页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第71页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第72页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第73页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第74页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第75页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第76页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第77页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第78页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第79页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第80页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第81页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第82页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第83页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第84页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第85页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第86页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第87页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第88页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第89页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第90页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第91页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第92页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第93页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第94页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第95页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第96页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第97页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第98页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第99页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第99页第1张图片 (415x255)...
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (423字符)
+  [IMG] 第99页第1张图片处理完成
+  [PDF] 第100页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第100页第1张图片 (455x334)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (803字符)
+  [IMG] 第100页第1张图片处理完成
+  [PDF] 第101页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第101页第1张图片 (415x279)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (574字符)
+  [IMG] 第101页第1张图片处理完成
+  [PDF] 第102页, 发现17张图片, 过滤后14张真实图片
+  [IMG] 开始处理第102页第1张图片 (415x220)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (544字符)
+  [IMG] 第102页第1张图片处理完成
+  [IMG] 开始处理第102页第2张图片 (355x240)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (173字符)
+  [IMG] 第102页第2张图片处理完成
+  [PDF] 第103页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第104页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第104页第1张图片 (415x312)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (425字符)
+  [IMG] 第104页第1张图片处理完成
+  [PDF] 第105页, 发现21张图片, 过滤后14张真实图片
+  [PDF] 第106页, 发现21张图片, 过滤后17张真实图片
+  [PDF] 第107页, 发现19张图片, 过滤后15张真实图片
+  [PDF] 第108页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第109页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第110页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第111页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第112页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第113页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第114页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第115页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第116页, 发现47张图片, 过滤后17张真实图片
+  [IMG] 开始处理第116页第5张图片 (185x219)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (372字符)
+  [IMG] 第116页第5张图片处理完成
+  [PDF] 第117页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第118页, 发现73张图片, 过滤后13张真实图片
+  [IMG] 开始处理第118页第1张图片 (416x328)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [EMBED] 共1条, 批次16, 1批
+    [EMBED] 批 1/1 (1条)...
+    [EMBED] 批完成 (1/1)
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x2529ebd9820>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 39460727-735b-42f2-92d4-a2333e0708f3)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+Retrying in 1s [Retry 1/5].
+    [VLM] API返回成功 (451字符)
+  [IMG] 第118页第1张图片处理完成
+  [PDF] 第119页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第120页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第121页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第121页第1张图片 (408x280)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x252bc52a930>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 0d46c09a-eb5f-47e2-ae23-5ee563018190)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+Retrying in 2s [Retry 2/5].
+    [VLM] API返回成功 (812字符)
+  [IMG] 第121页第1张图片处理完成
+  [PDF] 第122页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第123页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第124页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第125页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第126页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第127页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第128页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第129页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第130页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第131页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第132页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第133页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第134页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第135页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第136页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第137页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第138页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第139页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第140页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第141页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第142页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第143页, 发现16张图片, 过滤后12张真实图片
+  [PDF] 第144页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x2529cbbeb70>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 753ef213-4314-4002-b388-16dfbdc053e0)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+Retrying in 4s [Retry 3/5].
+  [PDF] 第145页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第145页第1张图片 (404x190)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (371字符)
+  [IMG] 第145页第1张图片处理完成
+  [PDF] 第146页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第147页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第148页, 发现26张图片, 过滤后13张真实图片
+  [PDF] 第149页, 发现26张图片, 过滤后13张真实图片
+  [PDF] 第150页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第151页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第152页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第153页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第154页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第155页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第156页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第157页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第158页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x252eee80410>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 5d07f56b-e3ab-40f4-8885-f6da5a60818c)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+Retrying in 8s [Retry 4/5].
+  [PDF] 第159页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第160页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第161页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第162页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第163页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第164页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第165页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第166页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第167页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第168页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第169页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第170页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第171页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第172页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第173页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第174页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第175页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第176页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第177页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第178页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第179页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第180页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第181页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第182页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第183页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第184页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第185页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第186页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第187页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第188页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第189页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第190页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第191页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第192页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第193页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第194页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第195页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第196页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第197页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第198页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第199页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第200页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第201页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第202页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第203页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第204页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第205页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第206页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第207页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第208页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第209页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第210页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第211页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第212页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第213页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第214页, 发现22张图片, 过滤后12张真实图片
+  [PDF] 第215页, 发现33张图片, 过滤后12张真实图片
+  [PDF] 第216页, 发现35张图片, 过滤后12张真实图片
+  [PDF] 第217页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第218页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x252f7c6a150>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 1a4c21f7-3559-49a9-b634-83baa9b45831)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+Retrying in 8s [Retry 5/5].
+  [PDF] 第219页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第220页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第221页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第222页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第223页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第224页, 发现16张图片, 过滤后13张真实图片
+  [IMG] 开始处理第224页第1张图片 (415x302)...
+    [CLIP] 开始分类...
+    [CLIP] 获得锁，开始推理...
+    [VLM] 开始调用API...
+    [VLM] API返回成功 (279字符)
+  [IMG] 第224页第1张图片处理完成
+  [PDF] 第225页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第226页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第227页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第228页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第229页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第230页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第231页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第232页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第233页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第234页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第235页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第236页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第237页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第238页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第239页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第240页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第241页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第242页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第243页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第244页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第245页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第246页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第247页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第248页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第249页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第250页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第251页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第252页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第253页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第254页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第255页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第256页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第257页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第258页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第259页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第260页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第261页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第262页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第263页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第264页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第265页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第266页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第267页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第268页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第269页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第270页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x252ff195700>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 1ff32ef1-8d81-46d1-965a-6732113bb8c2)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/processor_config.json
+  [PDF] 第271页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第272页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第273页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第274页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第275页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第276页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第277页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第278页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第279页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第280页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第281页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第282页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第283页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第284页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第285页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第286页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第287页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第288页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第289页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第290页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第291页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第292页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第293页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第294页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第295页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第296页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第297页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第298页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第299页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第300页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第301页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第302页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第303页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第304页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第305页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第306页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第307页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第308页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第309页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第310页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第311页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第312页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x253058a52b0>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: d3ab2d66-cd6c-4c67-a988-f80453a3b5db)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json
+Retrying in 1s [Retry 1/5].
+  [PDF] 第313页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第314页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第315页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第316页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第317页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第318页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第319页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第320页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第321页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第322页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第323页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第324页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第325页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第326页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第327页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第328页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第329页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第330页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第331页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第332页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第333页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第334页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第335页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第336页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第337页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第338页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第339页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第340页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x2530e6e52b0>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: a494df17-82f8-4982-b2f2-802df77de5da)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json
+Retrying in 2s [Retry 2/5].
+  [PDF] 第341页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第342页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第343页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第344页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第345页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第346页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第347页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第348页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第349页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第350页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第351页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第352页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第353页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第354页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第355页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第356页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第357页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第358页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第359页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第360页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第361页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第362页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第363页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第364页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第365页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第366页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第367页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第368页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第369页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第370页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第371页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第372页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x25314d05700>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 97ba2819-6847-4aa4-938b-76bbaf900658)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json
+Retrying in 4s [Retry 3/5].
+  [PDF] 第373页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第374页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第375页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第376页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第377页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第378页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第379页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第380页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第381页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第382页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第383页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第384页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第385页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第386页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第387页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第388页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第389页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第390页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第391页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第392页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第393页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第394页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第395页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第396页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第397页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第398页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第399页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第400页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第401页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第402页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第403页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第404页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第405页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第406页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第407页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第408页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第409页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第410页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第411页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第412页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第413页, 发现15张图片, 过滤后12张真实图片
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x2531e635700>, 'Connection to huggingface.co timed out. (connect timeout=10)'))"), '(Request ID: 54ccfbf8-4ce3-4178-9384-c1bb93953ed5)')' thrown while requesting HEAD https://huggingface.co/BAAI/bge-reranker-v2-m3/resolve/main/preprocessor_config.json
+Retrying in 8s [Retry 4/5].
+  [PDF] 第414页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第415页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第416页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第417页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第418页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第419页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第420页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第421页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第422页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第423页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第424页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第425页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第426页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第427页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第428页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第429页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第430页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第431页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第432页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第433页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第434页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第435页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第436页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第437页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第438页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第439页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第440页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第441页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第442页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第443页, 发现16张图片, 过滤后16张真实图片
+  [PDF] 第444页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第445页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第446页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第447页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第448页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第449页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第450页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第451页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第452页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第453页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第454页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第455页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第456页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第457页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第458页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第459页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第460页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第461页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第462页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第463页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第464页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第465页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第466页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第467页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第468页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第469页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第470页, 发现15张图片, 过滤后12张真实图片
+  [PDF] 第471页, 发现15张图片, 过滤后12张真实图片

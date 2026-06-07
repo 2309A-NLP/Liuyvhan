@@ -1,0 +1,16 @@
+[START] 开始加载模块...
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[OK] 模型: Qwen/Qwen3-VL-8B-Instruct
+[OK] VLM启用: True
+[OK] CLIP启用: True
+[INFO] 发现 2 个 PDF
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\刘禹含\AppData\Local\Temp\jieba.cache
+Loading model cost 5.146 seconds.
+Prefix dict has been built successfully.
+
+[OK] 索引完成！耗时: 11141.688s
+  招股说明书2.pdf: success - 1595 chunks
+  招股说明书1.pdf: success - 2177 chunks

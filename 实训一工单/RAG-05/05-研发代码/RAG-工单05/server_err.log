@@ -1,0 +1,8 @@
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+C:\Users\ÁõÓíº¬\Desktop\RAG-¹¤µ¥05\app\services\embedding_service.py:26: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.embedding_dimension = self.model.get_sentence_embedding_dimension()
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\ÁõÓíº¬\AppData\Local\Temp\jieba.cache
+Loading model cost 1.291 seconds.
+Prefix dict has been built successfully.

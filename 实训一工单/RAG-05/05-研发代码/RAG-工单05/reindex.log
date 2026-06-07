@@ -1,0 +1,26 @@
+正在加载模块...
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+数据目录: C:\Users\刘禹含\Desktop\RAG-工单04\data\raw
+发现 2 个 PDF:
+  招股说明书1.pdf
+  招股说明书2.pdf
+
+开始并行重建索引...
+(这包含CLIP图片分类 + GLM-4.1V多模态描述 + 向量嵌入，可能需要几分钟)
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\刘禹含\AppData\Local\Temp\jieba.cache
+Loading model cost 1.643 seconds.
+Prefix dict has been built successfully.
+
+==================================================
+索引完成！总耗时: 8314.791 秒
+
+索引过程中出错: 'gbk' codec can't encode character '\u2713' in position 2: illegal multibyte sequence
+Traceback (most recent call last):
+  File "C:\Users\刘禹含\Desktop\RAG-工单04\scripts\reindex_all.py", line 42, in <module>
+    print(f"  \u2713 {name}: {r['pages']}页, {r['chunks']}chunks, {dur}s", flush=True)
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2713' in position 2: illegal multibyte sequence
+
+完成时间: 14:00:52
