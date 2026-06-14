@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "question": "本届竞赛的报名截止时间和最终提交截止时间分别是什么？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 2,
+    "question": "参赛对象有哪些限制，是否允许跨学校或跨单位组队？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 3,
+    "question": "任务一的输入、输出和目标分别是什么？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 4,
+    "question": "任务一与任务二在评价指标或输出要求上有哪些区别？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 5,
+    "question": "训练集、验证集、测试集分别包含哪些内容或字段？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 6,
+    "question": "最终提交包必须包含哪些文件，目录结构有什么要求？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 7,
+    "question": "初赛和决赛的评分维度分别是什么，权重是否不同？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 8,
+    "question": "如果队员信息、队名或指导老师发生变更，需要走什么流程？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 9,
+    "question": "官方推荐的运行环境、依赖版本或硬件要求是什么？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  },
+  {
+    "id": 10,
+    "question": "获奖队伍还需要满足哪些附加条件，例如答辩、材料提交或代码复现？",
+    "reference_answer": "TODO: 根据对应PDF填写标准答案"
+  }
+]
