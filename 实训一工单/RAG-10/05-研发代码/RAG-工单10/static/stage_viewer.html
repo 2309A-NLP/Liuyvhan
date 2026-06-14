@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stage Viewer — PDF 处理管道可视化</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #0f1117; color: #e1e4ea; padding: 20px; }
+h1 { font-size: 22px; margin-bottom: 6px; color: #fff; }
+h2 { font-size: 16px; color: #8b8fa3; margin-bottom: 16px; font-weight: 400; }
+.subtitle { color: #6b6f83; font-size: 13px; margin-bottom: 20px; }
+.controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.controls select, .controls input { background: #1a1d27; border: 1px solid #2d3040; color: #e1e4ea; padding: 8px 12px; border-radius: 6px; font-size: 14px; }
+.controls button { background: #3b82f6; border: none; color: #fff; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.controls button:hover { background: #2563eb; }
+.controls label { color: #8b8fa3; font-size: 13px; }
+.stats { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.stat-card { background: #1a1d27; border: 1px solid #2d3040; border-radius: 8px; padding: 12px 18px; min-width: 100px; }
+.stat-card .num { font-size: 22px; font-weight: 700; color: #fff; }
+.stat-card .label { font-size: 12px; color: #6b6f83; margin-top: 2px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab { padding: 8px 18px; background: #1a1d27; border: 1px solid #2d3040; border-radius: 6px; cursor: pointer; font-size: 13px; color: #8b8fa3; }
+.tab.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.page-card { background: #1a1d27; border: 1px solid #2d3040; border-radius: 8px; margin-bottom: 12px; padding: 14px; }
+.page-card h3 { font-size: 14px; color: #8b8fa3; margin-bottom: 8px; }
+.block { padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+.block.page_text { background: #1e293b; border-left: 3px solid #3b82f6; }
+.block.table { background: #1a2e1f; border-left: 3px solid #22c55e; }
+.block.image { background: #2a1f1a; border-left: 3px solid #f59e0b; }
+.block-label { font-size: 11px; color: #6b6f83; margin-bottom: 4px; }
+.page-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.page-btn { padding: 4px 10px; background: #1a1d27; border: 1px solid #2d3040; border-radius: 4px; cursor: pointer; font-size: 12px; color: #8b8fa3; }
+.page-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+.img-card { display: inline-flex; flex-direction: column; background: #1a1d27; border: 1px solid #2d3040; border-radius: 8px; padding: 10px; margin: 6px; max-width: 280px; vertical-align: top; }
+.img-card img { max-width: 240px; border-radius: 4px; }
+.img-card .img-label { font-size: 11px; color: #f59e0b; margin: 6px 0 4px; }
+.img-card .img-clip { font-size: 11px; color: #94a3b8; }
+.img-card .img-vlm { font-size: 11px; color: #cbd5e1; margin-top: 4px; }
+.chunk-row { display: flex; gap: 6px; align-items: flex-start; padding: 6px 10px; border-bottom: 1px solid #2d3040; font-size: 13px; }
+.chunk-row:last-child { border-bottom: none; }
+.chunk-type { flex-shrink: 0; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; min-width: 60px; text-align: center; }
+.chunk-type.pt { background: #1e3a5f; color: #60a5fa; }
+.chunk-type.tb { background: #1a3a20; color: #4ade80; }
+.chunk-type.im { background: #3a2815; color: #fbbf24; }
+.chunk-content { color: #94a3b8; white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
+.chunk-meta { flex-shrink: 0; color: #6b6f83; font-size: 11px; min-width: 60px; text-align: right; }
+.config-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.config-table td { padding: 6px 12px; border-bottom: 1px solid #2d3040; }
+.config-table td:first-child { color: #6b6f83; width: 200px; }
+.config-table td:last-child { color: #e1e4ea; }
+.preview-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.loading { color: #6b6f83; text-align: center; padding: 40px; font-size: 14px; }
+.error { color: #ef4444; text-align: center; padding: 40px; }
+</style>
+</head>
+<body>
+
+<h1>Stage Viewer</h1>
+<h2>PDF 处理管道可视化工具</h2>
+
+<div class="controls">
+  <select id="fileSelect"></select>
+  <label for="maxPages">最多页数:</label>
+  <input type="number" id="maxPages" value="3" min="1" max="30" style="width:60px">
+  <button onclick="loadPreview()">加载预览</button>
+</div>
+
+<div id="stats" class="stats" style="display:none"></div>
+
+<div class="tabs" id="tabs" style="display:none">
+  <div class="tab active" onclick="switchTab('stage1')">Stage 1 文字+表格</div>
+  <div class="tab" onclick="switchTab('stage2')">Stage 2 图片语义</div>
+  <div class="tab" onclick="switchTab('stage3')">Stage 3 Chunks</div>
+  <div class="tab" onclick="switchTab('config')">配置参数</div>
+</div>
+
+<div id="stage1" class="tab-panel active"></div>
+<div id="stage2" class="tab-panel"></div>
+<div id="stage3" class="tab-panel"></div>
+<div id="config" class="tab-panel"></div>
+
+<div id="loading" class="loading">加载中...</div>
+
+<script>
+async function loadFileList() {
+  try {
+    const r = await fetch('/api/v1/documents/status');
+    const data = await r.json();
+    const sel = document.getElementById('fileSelect');
+    sel.innerHTML = '';
+    if (data.indexed_documents && data.indexed_documents.length) {
+      data.indexed_documents.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.file_name;
+        opt.textContent = `${d.file_name} (${d.pages}页, ${d.chunks}chunks)`;
+        sel.appendChild(opt);
+      });
+    } else {
+      // fallback: scan raw dir
+      sel.innerHTML = '<option>招股说明书1.pdf</option><option>招股说明书2.pdf</option>';
+    }
+    loadPreview();
+  } catch(e) {
+    document.getElementById('loading').textContent = '无法连接服务器';
+  }
+}
+
+async function loadPreview() {
+  const file = document.getElementById('fileSelect').value || '招股说明书1.pdf';
+  const maxPages = document.getElementById('maxPages').value || 3;
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('loading').textContent = '正在解析 PDF...';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('tabs').style.display = 'none';
+
+  try {
+    const r = await fetch(`/api/v1/debug/preview?file_name=${encodeURIComponent(file)}&max_pages=${maxPages}`);
+    const data = await r.json();
+    renderAll(data);
+  } catch(e) {
+    document.getElementById('loading').textContent = '请求失败: ' + e.message;
+    document.getElementById('loading').className = 'error';
+  }
+}
+
+function renderAll(data) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('tabs').style.display = 'flex';
+
+  // Stats
+  const statsDiv = document.getElementById('stats');
+  statsDiv.style.display = 'flex';
+  statsDiv.innerHTML = `
+    <div class="stat-card"><div class="num">${data.total_pages}</div><div class="label">总页数</div></div>
+    <div class="stat-card"><div class="num">${data.shown_pages}</div><div class="label">当前显示</div></div>
+    <div class="stat-card"><div class="num">${data.total_chunks}</div><div class="label">总 Chunks</div></div>
+    <div class="stat-card"><div class="num">${Object.values(data.chunk_types).reduce((a,b)=>a+b, 0)}</div><div class="label">(含图片块)</div></div>
+  `;
+
+  // Stage 1: text + tables
+  renderStage1(data);
+
+  // Stage 2: images
+  renderStage2(data);
+
+  // Stage 3: chunks
+  renderStage3(data);
+
+  // Config
+  renderConfig(data);
+
+  switchTab('stage1');
+}
+
+function renderStage1(data) {
+  const container = document.getElementById('stage1');
+  let html = '';
+  data.pages.forEach(p => {
+    html += `<div class="page-card"><h3>第 ${p.page} 页</h3>`;
+
+    // raw text
+    if (p.raw_text) {
+      html += `<div class="block-label">原始文字 (前2000字符)</div><div class="block page_text">${escapeHtml(p.raw_text)}</div>`;
+    }
+
+    // text blocks
+    p.text_blocks.forEach(b => {
+      html += `<div class="block-label">文字块 #${b.index}</div><div class="block page_text">${escapeHtml(b.content)}</div>`;
+    });
+
+    // table blocks
+    p.table_blocks.forEach(b => {
+      html += `<div class="block-label">表格块 #${b.index}</div><div class="block table">${escapeHtml(b.content)}</div>`;
+    });
+
+    html += `</div>`;
+  });
+  container.innerHTML = html || '<div class="error">暂无数据</div>';
+}
+
+function renderStage2(data) {
+  const container = document.getElementById('stage2');
+  let html = '';
+  data.pages.forEach(p => {
+    if (!p.image_previews || p.image_previews.length === 0) {
+      html += `<div class="page-card"><h3>第 ${p.page} 页</h3><div style="color:#6b6f83;font-size:13px">本页无图片</div></div>`;
+      return;
+    }
+    html += `<div class="page-card"><h3>第 ${p.page} 页 — ${p.image_previews.length} 张图片</h3><div class="preview-grid">`;
+    p.image_previews.forEach(img => {
+      html += `<div class="img-card">`;
+      if (img.thumbnail_b64) {
+        html += `<img src="data:image/png;base64,${img.thumbnail_b64}" alt="page image">`;
+      }
+      html += `<div class="img-label">图片 #${img.block_index}</div>`;
+      if (img.clip_labels && img.clip_labels.length) {
+        const labels = img.clip_labels.map(l => `${l.label}(${(l.score*100).toFixed(0)}%)`).join(' | ');
+        html += `<div class="img-clip">CLIP: ${labels}</div>`;
+      }
+      if (img.vlm_description) {
+        html += `<div class="img-vlm">VLM: ${escapeHtml(img.vlm_description)}</div>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html || '<div class="error">暂无图片数据</div>';
+}
+
+function renderStage3(data) {
+  const container = document.getElementById('stage3');
+  let html = '';
+
+  // Chunk type stats
+  html += `<div class="page-card"><h3>Chunk 类型分布</h3>`;
+  for (const [type, count] of Object.entries(data.chunk_types)) {
+    const label = type === 'page_text' ? '纯文本' : type === 'table' ? '表格' : type === 'image' ? '图片语义' : type;
+    html += `<div style="font-size:13px;margin:4px 0;color:#94a3b8">${label}: ${count} 个</div>`;
+  }
+  html += `<div style="font-size:12px;color:#6b6f83;margin-top:6px">以下显示前 20 个 chunk（共 ${data.total_chunks} 个）</div></div>`;
+
+  // Chunk list
+  data.chunks_preview.forEach(c => {
+    const typeCls = c.block_type === 'page_text' ? 'pt' : c.block_type === 'table' ? 'tb' : 'im';
+    const typeLabel = c.block_type === 'page_text' ? '纯文本' : c.block_type === 'table' ? '表格' : '图片';
+    html += `<div class="chunk-row">
+      <div class="chunk-meta">P${c.page}</div>
+      <div class="chunk-type ${typeCls}">${typeLabel}</div>
+      <div class="chunk-content">${escapeHtml(c.content)}</div>
+      <div class="chunk-meta">${c.content_length}字</div>
+    </div>`;
+  });
+  container.innerHTML = html || '<div class="error">暂无 chunks 数据</div>';
+}
+
+function renderConfig(data) {
+  const container = document.getElementById('config');
+  container.innerHTML = `<div class="page-card">
+    <table class="config-table">
+      <tr><td>文件名称</td><td>${escapeHtml(data.file_name)}</td></tr>
+      <tr><td>文档 ID</td><td>${data.doc_id}</td></tr>
+      <tr><td>Chunk Size</td><td>${data.config.chunk_size} 字符</td></tr>
+      <tr><td>Chunk Overlap</td><td>${data.config.chunk_overlap} 字符</td></tr>
+      <tr><td>最小图片宽度</td><td>${data.config.min_image_width}px</td></tr>
+      <tr><td>最小图片高度</td><td>${data.config.min_image_height}px</td></tr>
+      <tr><td>VLM 图像语义</td><td>${data.config.enable_vlm ? '已启用' : '未启用'}</td></tr>
+      <tr><td>Embedding 模型</td><td>${escapeHtml(data.config.embedding_model)}</td></tr>
+    </table>
+  </div>`;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
+  document.getElementById(name).classList.add('active');
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+loadFileList();
+</script>
+</body>
+</html>

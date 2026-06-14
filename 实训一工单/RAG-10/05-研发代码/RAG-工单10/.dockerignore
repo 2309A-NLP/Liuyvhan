@@ -1,0 +1,55 @@
+# =============================================================================
+# .dockerignore - Docker 构建上下文排除规则
+# =============================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+venv/
+.venv/
+env/
+conda-env/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 项目数据（通过卷挂载，不打包到镜像中）
+# 注意：.env 需要打包供 docker-compose env_file 使用
+# 但 .env 中的敏感信息通过 docker-compose 的 env_file 机制传递
+# 如果 .env 包含 API Key，确保它不会在镜像层中暴露
+.env.example
+.env.ccf_competition.example
+
+# Docker 相关不应打包到上下文的文件
+README.md
+reindex.bat
+run_eval.bat
+start_server.bat
+server_output.log
+kill8001.py
+clean_milvus.py
+_check_manifest.py
+_check_pages.py
+_inspect_chunks.py
+_test_import.py
+
+# 已经有 Dockerfile 和 docker-compose.yml，不需要打包其他 Docker 相关文件
+# 但需要保留 Dockerfile 本身

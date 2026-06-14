@@ -1,0 +1,17 @@
+D:\Anaconda\envs\RAG\Lib\site-packages\jieba\_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+C:\Users\刘禹含\Desktop\RAG-工单07\app\services\embedding_service.py:26: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.embedding_dimension = self.model.get_sentence_embedding_dimension()
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\刘禹含\AppData\Local\Temp\jieba.cache
+Loading model cost 1.335 seconds.
+Prefix dict has been built successfully.
+  [BM25] 已恢复: 太平洋保险.pdf (815 chunks)
+  [BM25] 已恢复: 国泰君安证券股份有限公司 .pdf (1480 chunks)
+  [CHECKPOINT] 索引已完成，跳过后台索引
+INFO:     Started server process [23532]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8002): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.

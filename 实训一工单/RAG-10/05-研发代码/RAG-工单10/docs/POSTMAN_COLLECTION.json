@@ -1,0 +1,202 @@
+{
+  "info": {
+    "name": "RAG-工单01 API",
+    "_postman_id": "8f3633ca-f0be-43aa-aeff-08eb70e9d001",
+    "description": "基于《招股说明书1.pdf》的 RAG 问答接口集合",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Upload PDF",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "data/raw/招股说明书1.pdf"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/documents/upload",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "documents",
+            "upload"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Index PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"file_name\": \"招股说明书1.pdf\",\n  \"rebuild\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/documents/index",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "documents",
+            "index"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ask RAG",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"武汉兴图新科电子股份有限公司注册资本是多少？\",\n  \"file_name\": \"招股说明书1.pdf\",\n  \"top_k\": 5,\n  \"force_refresh\": false\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/chat/rag",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "chat",
+            "rag"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ask Pure LLM",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"武汉兴图新科电子股份有限公司注册资本是多少？\",\n  \"force_refresh\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/chat/llm",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "chat",
+            "llm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Submit Feedback",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_mode\": \"rag\",\n  \"question\": \"武汉兴图新科电子股份有限公司注册资本是多少？\",\n  \"answer\": \"注册资本为5,520万元。\",\n  \"rating\": 5,\n  \"comment\": \"答案准确\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "feedback"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Run Evaluation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"file_name\": \"招股说明书1.pdf\",\n  \"top_k\": 5,\n  \"questions_file\": \"./data/processed/evaluation_questions.json\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/evaluation/run",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "evaluation",
+            "run"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ]
+}

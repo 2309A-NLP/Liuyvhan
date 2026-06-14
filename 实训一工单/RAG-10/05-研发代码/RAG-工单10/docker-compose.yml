@@ -1,0 +1,212 @@
+# =============================================================================
+# docker-compose.yml - RAG 金融问答系统
+# 工单编号：人工智能 NLP-RAG-金融问答系统部署
+# =============================================================================
+# 该 compose 文件定义了三个服务：
+#   1. milvus  - 向量数据库，存储文档向量
+#   2. redis   - 缓存服务，缓存查询结果和会话
+#   3. app     - RAG 金融问答服务（本系统）
+#
+# 网络：所有服务共享 rag-network，可通过服务名互相通信
+#
+# 使用方式：
+#   docker compose up -d          # 启动所有服务
+#   docker compose logs -f        # 查看实时日志
+#   docker compose down           # 停止所有服务
+#   docker compose down -v        # 停止并删除所有数据卷（注意数据丢失！）
+# =============================================================================
+
+version: "3.8"
+
+services:
+  # ============================================================================
+  # Milvus - 向量数据库
+  # ============================================================================
+  milvus:
+    image: milvusdb/milvus:v2.4.17
+    container_name: rag-milvus
+    restart: unless-stopped
+    ports:
+      - "19530:19530"   # gRPC 端口（应用连接）
+      - "9091:9091"     # 监控端口（可选）
+    environment:
+      ETCD_ENDPOINTS: "milvus-etcd:2379"
+      MINIO_ADDRESS: "milvus-minio:9000"
+      COMMON_STORAGETYPE: "local"
+    volumes:
+      - milvus-data:/var/lib/milvus
+    networks:
+      - rag-network
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9091/healthz"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s  # Milvus 启动较慢，给予充足时间
+      retries: 5
+
+  milvus-etcd:
+    image: quay.io/coreos/etcd:v3.5.16
+    container_name: rag-milvus-etcd
+    restart: unless-stopped
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: "revision"
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    volumes:
+      - milvus-etcd-data:/etcd
+    networks:
+      - rag-network
+    command: |
+      etcd
+      --name=etcd0
+      --data-dir=/etcd
+      --advertise-client-urls=http://milvus-etcd:2379
+      --listen-client-urls=http://0.0.0.0:2379
+      --initial-advertise-peer-urls=http://milvus-etcd:2380
+      --listen-peer-urls=http://0.0.0.0:2380
+      --initial-cluster=etcd0=http://milvus-etcd:2380
+
+  milvus-minio:
+    image: minio/minio:RELEASE.2024-11-17T01-20-37Z
+    container_name: rag-milvus-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - milvus-minio-data:/data
+    networks:
+      - rag-network
+    command: minio server /data --console-address ":9001"
+
+  # ============================================================================
+  # Redis - 缓存服务
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: rag-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - rag-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    command: redis-server --appendonly yes --save 300 10 --save 60 10000
+
+  # ============================================================================
+  # RAG 金融问答服务 - 主应用
+  # ============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rag-financial-qa:latest
+    container_name: rag-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"   # API 服务端口
+    environment:
+      # ---- 应用配置 ----
+      APP_NAME: "RAG 金融问答系统"
+      APP_HOST: "0.0.0.0"
+      APP_PORT: "8000"
+      LOG_LEVEL: "INFO"
+
+      # ---- Milvus 配置（Docker 内部通过服务名访问） ----
+      MILVUS_URI: "http://milvus:19530"
+      MILVUS_TOKEN: ""
+      MILVUS_COLLECTION: "prospectus_chunks"
+      MILVUS_CONSISTENCY: "Strong"
+
+      # ---- Redis 配置 ----
+      REDIS_URL: "redis://redis:6379/0"
+      REDIS_CACHE_TTL: "3600"
+
+      # ---- LLM 配置（必须通过 .env 文件或环境变量注入 API Key） ----
+      # LLM_BASE_URL 和 LLM_API_KEY 请从 .env 文件加载
+      # 也可在部署时通过环境变量传入:
+      #    docker compose run -e LLM_API_KEY=sk-xxx ...
+
+      # ---- 离线模型模式（镜像内置模型缓存） ----
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+
+      # ---- 嵌入模型配置 ----
+      EMBEDDING_MODEL: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+      EMBEDDING_MODEL_PATH: ""
+
+      # ---- 图像语义解析 ----
+      ENABLE_MULTIMODAL_IMAGE_PARSING: "true"
+      ENABLE_CLIP_IMAGE_SEMANTICS: "true"
+      ENABLE_VLM_IMAGE_SEMANTICS: "false"  # Docker 中默认关闭 VLM（需要额外 GPU 资源）
+
+      # ---- 数据路径 ----
+      DATA_ROOT: "/app/data"
+      RAW_DATA_DIR: "/app/data/raw"
+      PROCESSED_DATA_DIR: "/app/data/processed"
+      EXPORT_DIR: "/app/data/exports"
+      IMAGE_DATA_DIR: "/app/data/processed/images"
+
+      # ---- 检索参数 ----
+      CHUNK_SIZE: "700"
+      CHUNK_OVERLAP: "120"
+      TOP_K: "5"
+      VECTOR_TOP_K: "8"
+      BM25_TOP_K: "8"
+      HYBRID_TOP_K: "5"
+      BM25_WEIGHT: "0.4"
+      VECTOR_WEIGHT: "0.6"
+      ENABLE_RERANKER: "true"
+      RERANKER_MODEL: "BAAI/bge-reranker-v2-m3"
+
+    env_file:
+      - .env   # 加载 LLM_API_KEY 等敏感配置
+    volumes:
+      # 数据持久化：PDF 源文件、处理后的 chunks 和导出结果
+      - rag-data:/app/data
+      # 如果有本地预下载的模型，可以额外挂载
+      # - C:/models:/models:ro
+    networks:
+      - rag-network
+    depends_on:
+      milvus:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s  # 模型加载需要时间
+      retries: 5
+
+# ============================================================================
+# 数据卷定义
+# ============================================================================
+volumes:
+  milvus-data:           # Milvus 向量数据
+    driver: local
+  milvus-etcd-data:      # Milvus 元数据
+    driver: local
+  milvus-minio-data:     # Milvus 日志/快照
+    driver: local
+  redis-data:            # Redis 持久化数据
+    driver: local
+  rag-data:              # RAG 应用数据（PDF、chunks、导出文件）
+    driver: local
+
+# ============================================================================
+# 网络定义
+# ============================================================================
+networks:
+  rag-network:
+    driver: bridge
+    name: rag-network
