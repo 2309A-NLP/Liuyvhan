@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日程管家</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f0f4f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .app-container {
+    width: 1200px;
+    height: 90vh;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #e0e8f0;
+  }
+  /* ===== 左侧聊天区 ===== */
+  .chat-panel {
+    width: 440px;
+    min-width: 440px;
+    border-right: 1px solid #e8edf3;
+    display: flex;
+    flex-direction: column;
+    background: #f8faff;
+  }
+  .chat-header {
+    padding: 20px 24px 16px;
+    background: #fff;
+    border-bottom: 1px solid #e8edf3;
+  }
+  .chat-header h1 {
+    font-size: 20px;
+    color: #1a2a4a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chat-header h1 span { background: #4a90d9; color: #fff; font-size: 12px; padding: 2px 10px; border-radius: 10px; }
+  .chat-header p { font-size: 13px; color: #7a8ba0; margin-top: 4px; }
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-thumb { background: #d0d8e4; border-radius: 2px; }
+  .msg { max-width: 88%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; word-break: break-word; white-space: pre-wrap; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .msg.user {
+    align-self: flex-end;
+    background: #4a90d9;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.assistant {
+    align-self: flex-start;
+    background: #fff;
+    color: #1a2a4a;
+    border: 1px solid #e0e8f0;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+  .msg.assistant .schedule-line { font-family: "Consolas", "Courier New", monospace; color: #4a6a8a; }
+  .input-area {
+    padding: 16px 20px 20px;
+    border-top: 1px solid #e8edf3;
+    background: #fff;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .input-row textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #d8e0ea;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    min-height: 44px;
+    max-height: 120px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    background: #f8faff;
+  }
+  .input-row textarea:focus { border-color: #4a90d9; box-shadow: 0 0 0 3px rgba(74,144,217,0.12); }
+  .input-row button {
+    padding: 10px 20px;
+    background: #4a90d9;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+  .input-row button:hover { background: #3a7cc8; }
+  .input-row button:disabled { background: #a0b8d0; cursor: not-allowed; }
+  .example-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .example-tag {
+    padding: 4px 10px;
+    background: #eef3fa;
+    border: 1px solid #d8e2ee;
+    border-radius: 14px;
+    font-size: 12px;
+    color: #4a6a8a;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .example-tag:hover { background: #dce6f2; border-color: #4a90d9; color: #4a90d9; }
+
+  /* ===== 右侧面板 ===== */
+  .schedule-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+  .schedule-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e8edf3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .schedule-header h2 { font-size: 17px; color: #1a2a4a; }
+  .schedule-header .tab-group { display: flex; gap: 4px; }
+  .tab-btn {
+    padding: 6px 14px;
+    border: 1px solid #d8e2ee;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #fff;
+    color: #4a6a8a;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active { background: #4a90d9; color: #fff; border-color: #4a90d9; }
+  .tab-btn:hover:not(.active) { background: #eef3fa; }
+  .schedule-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+  }
+  .schedule-list::-webkit-scrollbar { width: 4px; }
+  .schedule-list::-webkit-scrollbar-thumb { background: #d0d8e4; border-radius: 2px; }
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #9aabb8;
+    gap: 8px;
+  }
+  .empty-state .icon { font-size: 48px; opacity: 0.4; }
+  .schedule-card {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #e8edf3;
+    background: #fafcff;
+    transition: all 0.2s;
+  }
+  .schedule-card:hover { border-color: #c8d6e8; background: #f5f9ff; }
+  .schedule-card .time {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4a90d9;
+    min-width: 52px;
+  }
+  .schedule-card .id {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 12px;
+    color: #8a9aaa;
+    min-width: 56px;
+    text-align: center;
+  }
+  .schedule-card .content {
+    flex: 1;
+    font-size: 14px;
+    color: #1a2a4a;
+    padding: 0 12px;
+  }
+  .schedule-card .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #eef3fa;
+    color: #6a8aaa;
+    white-space: nowrap;
+  }
+  .schedule-card .badge.repeat { background: #e8f4e8; color: #3a8a3a; }
+  .schedule-card .badge.completed { background: #e8f0e8; color: #5a9a5a; }
+  .schedule-card .badge.cancelled { background: #fae8e8; color: #aa5a5a; }
+  .schedule-count {
+    font-size: 13px;
+    color: #8a9aaa;
+    padding: 8px 24px;
+    border-top: 1px solid #e8edf3;
+    text-align: center;
+  }
+
+  /* ===== 提醒弹窗 ===== */
+  .reminder-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  .reminder-overlay.show { display: flex; }
+  .reminder-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 44px 28px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .reminder-box .bell { font-size: 48px; margin-bottom: 12px; }
+  .reminder-box .reminder-text { font-size: 20px; color: #1a2a4a; line-height: 1.6; margin-bottom: 8px; }
+  .reminder-box .reminder-time { font-size: 13px; color: #8a9aaa; margin-bottom: 20px; }
+  .reminder-box .btn-ok {
+    padding: 10px 36px;
+    background: #4a90d9;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .reminder-box .btn-ok:hover { background: #3a7cc8; }
+
+  /* ===== 加载动画 ===== */
+  .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
+  .typing-dots span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #8a9aaa;
+    animation: dotBounce 1.2s infinite ease-in-out;
+  }
+  .typing-dots span:nth-child(1) { animation-delay: 0s; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce { 0%,80%,100% { transform: scale(0.7); } 40% { transform: scale(1); } }
+
+  @media (max-width: 900px) {
+    .app-container { flex-direction: column; width: 100%; height: 100vh; border-radius: 0; }
+    .chat-panel { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #e8edf3; max-height: 55vh; }
+    .schedule-panel { max-height: 45vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- 左侧聊天区 -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <h1>📅 日程管家 <span>智能助手</span></h1>
+      <p>添加 · 查询 · 修改 · 删除 · 循环提醒</p>
+    </div>
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="input" rows="1" placeholder="说点什么…（Enter发送，Shift+Enter换行）" onkeydown="handleKeyDown(event)"></textarea>
+        <button id="sendBtn" onclick="send()">发送</button>
+      </div>
+      <div class="example-tags">
+        <span class="example-tag" onclick="quickSend('明天下午5点提醒我开会')">明天下午5点开会</span>
+        <span class="example-tag" onclick="quickSend('看看我今天有什么安排')">今天有什么安排</span>
+        <span class="example-tag" onclick="quickSend('每天早上8点提醒我起床')">每天早上8点起床</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧日程面板 -->
+  <div class="schedule-panel">
+    <div class="schedule-header">
+      <h2>📋 日程列表</h2>
+      <div class="tab-group">
+        <button class="tab-btn active" onclick="switchTab('today')">今天</button>
+        <button class="tab-btn" onclick="switchTab('tomorrow')">明天</button>
+        <button class="tab-btn" onclick="switchTab('week')">本周</button>
+        <button class="tab-btn" onclick="switchTab('all')">全部</button>
+      </div>
+    </div>
+    <div class="schedule-list" id="scheduleList"></div>
+    <div class="schedule-count" id="scheduleCount">共 0 条日程</div>
+  </div>
+</div>
+
+<!-- 提醒弹窗 -->
+<div class="reminder-overlay" id="reminderOverlay">
+  <div class="reminder-box">
+    <div class="bell">🔔</div>
+    <div class="reminder-text" id="reminderText"></div>
+    <div class="reminder-time" id="reminderTime"></div>
+    <button class="btn-ok" onclick="closeReminder()">我知道了 ✅</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 状态
+// ============================================================
+let chatHistory = [];
+let currentTab = 'today';
+let isSending = false;
+let reminderQueue = [];
+let isShowingReminder = false;
+
+// ============================================================
+// 消息处理
+// ============================================================
+function addMessage(role, content) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = content;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant typing';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  div.id = 'typingIndicator';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function handleKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+}
+
+function quickSend(text) {
+  document.getElementById('input').value = text;
+  send();
+}
+
+async function send() {
+  const input = document.getElementById('input');
+  const btn = document.getElementById('sendBtn');
+  const text = input.value.trim();
+  if (!text || isSending) return;
+
+  input.value = '';
+  isSending = true;
+  btn.disabled = true;
+
+  addMessage('user', text);
+  addTyping();
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, history: chatHistory }),
+    });
+    const data = await res.json();
+    removeTyping();
+
+    // 更新 history
+    chatHistory.push({ role: 'user', content: text });
+    if (data.history) {
+      chatHistory = data.history;
+    } else {
+      chatHistory.push({ role: 'assistant', content: data.reply });
+    }
+
+    // 保持 history 长度合理
+    if (chatHistory.length > 50) {
+      chatHistory = chatHistory.slice(-50);
+    }
+
+    addMessage('assistant', data.reply);
+
+    // 刷新日程列表
+    loadSchedules(currentTab);
+  } catch (err) {
+    removeTyping();
+    addMessage('assistant', '❌ 发送失败，请检查服务是否运行。');
+  }
+
+  isSending = false;
+  btn.disabled = false;
+  input.focus();
+}
+
+// ============================================================
+// 日程列表
+// ============================================================
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if ((tab === 'today' && b.textContent === '今天') ||
+        (tab === 'tomorrow' && b.textContent === '明天') ||
+        (tab === 'week' && b.textContent === '本周') ||
+        (tab === 'all' && b.textContent === '全部')) {
+      b.classList.add('active');
+    }
+  });
+  loadSchedules(tab);
+}
+
+async function loadSchedules(tab) {
+  const container = document.getElementById('scheduleList');
+  const countEl = document.getElementById('scheduleCount');
+
+  let url = '/list';
+  if (tab === 'tomorrow') url += '?date=tomorrow';
+  else if (tab === 'week') url += '?date=this_week';
+  else if (tab === 'all') url = '/all';
+  else url += '?date=today';
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const schedules = data.schedules || [];
+
+    countEl.textContent = `共 ${schedules.length} 条日程`;
+
+    if (schedules.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <div>暂无日程安排</div>
+          <div style="font-size:13px;color:#b0c0ce;">在左侧添加您的第一条日程吧</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = schedules.map(s => {
+      const timeStr = s.event_time ? s.event_time.substring(11, 16) : '--:--';
+      const idStr = String(s.id).padStart(7, '0');
+      const badges = [];
+      if (s.repeat_rule) badges.push(`<span class="badge repeat">🔄 ${s.repeat_rule}</span>`);
+      if (s.status === 'completed') badges.push('<span class="badge completed">✅ 已完成</span>');
+      if (s.status === 'cancelled') badges.push('<span class="badge cancelled">❌ 已取消</span>');
+      return `
+        <div class="schedule-card">
+          <div class="time">${timeStr}</div>
+          <div class="id">#${idStr}</div>
+          <div class="content">${s.content}</div>
+          <div>${badges.join(' ')}</div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    container.innerHTML = `<div class="empty-state"><div style="color:#c00;">⚠️ 加载失败</div></div>`;
+  }
+}
+
+// ============================================================
+// 到期提醒轮询
+// ============================================================
+async function checkReminders() {
+  try {
+    const res = await fetch('/due');
+    const data = await res.json();
+    if (data.has_reminders && data.reminders) {
+      for (const r of data.reminders) {
+        reminderQueue.push(r);
+      }
+      showNextReminder();
+    }
+  } catch (err) {
+    // 静默失败
+  }
+}
+
+function showNextReminder() {
+  if (isShowingReminder || reminderQueue.length === 0) return;
+  isShowingReminder = true;
+  const r = reminderQueue.shift();
+  document.getElementById('reminderText').textContent = r.reminder_text;
+  document.getElementById('reminderTime').textContent = r.event_time || '';
+  document.getElementById('reminderOverlay').classList.add('show');
+  // 播放提示音（如果浏览器支持）
+  try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgH9/f3+Af39/f3+AgH9/f3+AgA==').play(); } catch(e) {}
+}
+
+function closeReminder() {
+  document.getElementById('reminderOverlay').classList.remove('show');
+  isShowingReminder = false;
+  // 刷新日程列表
+  loadSchedules(currentTab);
+  setTimeout(showNextReminder, 500);
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+async function init() {
+  // 欢迎消息
+  addMessage('assistant', '您好！我是「日程管家」！我可以帮您添加、查询、修改和删除日程，到点还会温馨提醒您哦~ 请问有什么需要帮忙的吗？😊');
+
+  // 加载日程
+  loadSchedules('today');
+
+  // 每10秒检查一次到期提醒
+  setInterval(checkReminders, 10000);
+  checkReminders();
+}
+
+init();
+</script>
+</body>
+</html>
