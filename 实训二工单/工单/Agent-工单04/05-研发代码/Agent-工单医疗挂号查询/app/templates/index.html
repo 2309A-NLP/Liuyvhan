@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康助理 Agent</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Health Assistant Agent</p>
+                <h1>面向日常就医场景的健康助理工作台</h1>
+                <p class="hero-text">
+                    用自然语言完成挂号、查号源、取消预约和医生排班查询。
+                    当前页面接入的是挂号管理模块，后续可以继续扩展健康咨询、影像分析和健康档案能力。
+                </p>
+                <div class="hero-links">
+                    <a href="/docs" target="_blank" rel="noreferrer">打开接口文档</a>
+                    <a href="/openapi.json" target="_blank" rel="noreferrer">查看 OpenAPI</a>
+                </div>
+            </div>
+            <div class="hero-panel">
+                <div class="metric-card">
+                    <span class="metric-label">当前模块</span>
+                    <strong>挂号管理</strong>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">交互方式</span>
+                    <strong>MCP / Tool Calling</strong>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">数据访问</span>
+                    <strong>SQLAlchemy ORM</strong>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <section class="panel chat-panel">
+                <div class="panel-head">
+                    <h2>智能问诊输入区</h2>
+                    <p>输入一句自然语言，系统会自动识别意图并返回结果与执行轨迹。</p>
+                </div>
+
+                <form id="chat-form" class="chat-form">
+                    <div class="input-grid">
+                        <label>
+                            <span>用户 ID</span>
+                            <input id="user-id" type="number" value="1" min="1" required>
+                        </label>
+                        <label>
+                            <span>会话 ID</span>
+                            <input id="session-id" type="text" value="web-session-001" required>
+                        </label>
+                    </div>
+
+                    <label class="textarea-group">
+                        <span>健康助理请求</span>
+                        <textarea id="query-input" rows="4" placeholder="例如：帮我大宝挂一个今天下午 2 点儿科专家的号" required></textarea>
+                    </label>
+
+                    <div class="quick-actions">
+                        <button type="button" class="ghost-btn" data-query="帮我大宝挂一个今天下午 2 点儿科专家的号">挂儿科专家号</button>
+                        <button type="button" class="ghost-btn" data-query="牙科最近的号哪天的？">查询牙科号源</button>
+                        <button type="button" class="ghost-btn" data-query="取消我上周三挂的消化内科普通号">取消历史挂号</button>
+                        <button type="button" class="ghost-btn" data-query="帮我查下张建国医生下周的坐诊时间">查询医生排班</button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="submit-btn" type="submit" class="primary-btn">发送给健康助理</button>
+                        <button id="init-db-btn" type="button" class="secondary-btn">重置测试数据库</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel result-panel">
+                <div class="panel-head">
+                    <h2>执行结果</h2>
+                    <p>展示当前响应状态、返回消息与数据库动作结果。</p>
+                </div>
+
+                <div class="status-strip" id="status-strip">
+                    <span class="status-dot"></span>
+                    <span id="status-text">等待请求</span>
+                </div>
+
+                <div class="result-block">
+                    <div class="result-card">
+                        <span class="card-label">业务消息</span>
+                        <p id="message-output">请先输入一条请求，再点击“发送给健康助理”。</p>
+                    </div>
+                    <div class="result-card">
+                        <span class="card-label">识别结果</span>
+                        <p><strong>Intent：</strong><span id="intent-output">-</span></p>
+                        <p><strong>State：</strong><span id="state-output">-</span></p>
+                    </div>
+                </div>
+
+                <div class="json-panel">
+                    <div class="json-head">
+                        <h3>结构化返回</h3>
+                        <button type="button" id="copy-json-btn" class="mini-btn">复制 JSON</button>
+                    </div>
+                    <pre id="json-output">{
+  "message": "这里会显示接口返回结果"
+}</pre>
+                </div>
+            </section>
+
+            <section class="panel trace-panel">
+                <div class="panel-head">
+                    <h2>执行轨迹</h2>
+                    <p>用于查看 Agent 的可解释业务流程，不暴露模型内部推理。</p>
+                </div>
+                <ol id="trace-list" class="trace-list">
+                    <li>初始化后这里会展示识别意图、权限校验、工具调用等步骤。</li>
+                </ol>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
